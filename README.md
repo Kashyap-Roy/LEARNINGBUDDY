@@ -1,4 +1,3 @@
-Warning: fs was declared with const; use let for reassignable variables.
 # LearnMate AI
 
 LearnMate AI is a responsive front-end prototype for a more curious, collaborative way to learn. It brings study discussions, thinking-skill practice, imaginative brainstorming, and a learning-buddy demo together in one editorial-style experience.
