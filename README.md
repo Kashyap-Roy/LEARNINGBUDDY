@@ -2,6 +2,10 @@
 
 LearnMate AI is a responsive front-end prototype for a more curious, collaborative way to learn. It brings study discussions, thinking-skill practice, imaginative brainstorming, and a learning-buddy demo together in one editorial-style experience.
 
+## Live demo
+
+Explore the deployed prototype: [learnmate-ai-w44n.onrender.com](https://learnmate-ai-w44n.onrender.com/).
+
 ## Features
 
 - Responsive navigation for Explore, Communities, Skill Studio, Idea Lab, and the learning-buddy demo.
