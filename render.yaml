@@ -1,0 +1,8 @@
+Warning: fs was declared with const; use let for reassignable variables.
+services:
+  - type: web
+    name: learnmate-ai
+    runtime: static
+    buildCommand: "echo 'No build step required'"
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: true

@@ -23,12 +23,27 @@ python -m http.server 8000
 
 Then visit <http://localhost:8000>.
 
+## Deploy to Render
+
+This repository includes a Render Blueprint in [`render.yaml`](render.yaml). It publishes the repository root as a static site, so no package installation or build step is needed.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/hironbiswas57-droid/LEARNINGBUDDY)
+
+To deploy manually, create a **Static Site** in Render and connect this repository with these settings:
+
+- **Branch:** `main`
+- **Build command:** `echo 'No build step required'`
+- **Publish directory:** `.`
+
+Render will provide a public `onrender.com` URL after the first deploy. Pushes to `main` trigger updates when automatic deploys are enabled.
+
 ## Project files
 
 ```text
 LEARNINGBUDDY/
 ├── index.html
 ├── README.md
+├── render.yaml
 └── assets/
     ├── hero-wide.webp
     ├── astronaut-generated.webp
