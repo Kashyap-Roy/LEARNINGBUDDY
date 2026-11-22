@@ -1,4 +1,3 @@
-Warning: fs was declared with const; use let for reassignable variables.
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" fill="none">
 <defs>
  <linearGradient id="dress" x1="376" y1="417" x2="624" y2="737" gradientUnits="userSpaceOnUse"><stop stop-color="#82F1DC"/><stop offset="1" stop-color="#16C4BB"/></linearGradient>
