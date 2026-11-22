@@ -1,0 +1,55 @@
+Warning: fs was declared with const; use let for reassignable variables.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" fill="none">
+<defs>
+ <linearGradient id="dress" x1="376" y1="417" x2="624" y2="737" gradientUnits="userSpaceOnUse"><stop stop-color="#82F1DC"/><stop offset="1" stop-color="#16C4BB"/></linearGradient>
+ <linearGradient id="skin" x1="397" y1="187" x2="534" y2="389" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD8B6"/><stop offset="1" stop-color="#EF9B83"/></linearGradient>
+ <linearGradient id="hair" x1="351" y1="121" x2="558" y2="404" gradientUnits="userSpaceOnUse"><stop stop-color="#28252C"/><stop offset=".55" stop-color="#47313B"/><stop offset="1" stop-color="#211E27"/></linearGradient>
+ <pattern id="grain" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="2" r=".65" fill="#fff" opacity=".55"/><circle cx="5" cy="6" r=".45" fill="#113E41" opacity=".6"/></pattern>
+ <filter id="shadow" x="0" y="0" width="1.4" height="1.4"><feGaussianBlur stdDeviation="13"/></filter>
+</defs>
+<!-- loose orbit and hand-drawn botanical garden -->
+<path d="M84 562C125 250 737 111 827 390c64 199-147 279-278 275" stroke="#B9FFF0" stroke-opacity=".35" stroke-width="2" stroke-dasharray="8 13"/>
+<g stroke="#103F43" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+ <path d="M62 732c32-94 31-171 12-232m18 133c-53-15-65-41-76-73 37 4 63 18 79 50m-24-42c30-29 33-54 25-86-28 22-39 46-34 71m18 83c-36-4-56-21-69-50 32 3 55 14 68 36"/>
+ <path d="M775 741c-9-112 24-211 64-276m-58 164c48-19 71-49 86-87-43 7-72 25-89 60m26-49c-10-50 1-81 27-112 16 38 15 70-3 101m-53 117c37-1 67-20 88-53-34-3-63 8-85 31"/>
+ <path d="M687 208c39-44 73-46 107-34-20 32-49 48-83 47m8-25c-3-41 13-67 45-91 9 36 2 65-18 89"/>
+ <path d="M170 244c-20-51-9-89 25-121 19 37 22 70 4 104m-4-20c36-18 68-13 102 9-30 23-62 30-96 18"/>
+</g>
+<!-- flower heads, lightly imperfect ink contours -->
+<g stroke="#173C40" stroke-width="3">
+ <g transform="translate(113 446)"><path d="M0 0c-5-27-20-34-33-27 2 20 12 30 33 31-18 10-19 24-8 34 17-8 22-19 14-36 16 14 30 9 33-4-13-14-26-16-41-5 8-20-1-32-15-31-9 17-6 30 8 38Z" fill="#FF7082"/><circle cx="1" cy="0" r="8" fill="#FFC966"/></g>
+ <g transform="translate(756 355) scale(1.15)"><path d="M0 0c-5-27-20-34-33-27 2 20 12 30 33 31-18 10-19 24-8 34 17-8 22-19 14-36 16 14 30 9 33-4-13-14-26-16-41-5 8-20-1-32-15-31-9 17-6 30 8 38Z" fill="#FF8291"/><circle r="8" fill="#FFE07D"/></g>
+ <g transform="translate(185 205) scale(.72)"><path d="M0 0c-5-27-20-34-33-27 2 20 12 30 33 31-18 10-19 24-8 34 17-8 22-19 14-36 16 14 30 9 33-4-13-14-26-16-41-5 8-20-1-32-15-31-9 17-6 30 8 38Z" fill="#FF8291"/><circle r="8" fill="#FFE07D"/></g>
+</g>
+<!-- notebook drifting through the scene -->
+<g transform="translate(101 306) rotate(-16)"><path d="M9 13 124 0l-4 161-111 13Z" fill="#FFF9E8" stroke="#17383C" stroke-width="5"/><path d="m18 28 94-10M16 43l94-10M15 58l64-7M11 152l111-15" stroke="#6CCFC4" stroke-width="2"/><path d="m85 78 17 17-17 17-17-17Z" fill="#FF7181"/></g>
+<!-- soft silhouette shadow -->
+<ellipse cx="491" cy="726" rx="171" ry="22" fill="#073C41" opacity=".22" filter="url(#shadow)"/>
+<!-- flowing dark hair -->
+<path d="M346 263c-22-91 10-169 93-188 72-17 144 28 151 101 9 90-31 177-89 229l-162-49-39-93 46 0Z" fill="url(#hair)" stroke="#172D33" stroke-width="7"/>
+<path d="M379 145c45-50 112-61 158-26 24 18 32 44 30 76-29-13-46-38-52-62-13 36-47 58-89 69l-62 42c-5-38 0-71 15-99Z" fill="#342831" stroke="#1B2C31" stroke-width="5"/>
+<path d="M384 182c-7 44 4 112 36 160 25 38 64 52 97 31 29-18 48-58 47-101-2-66-32-118-83-127-43-8-80 5-97 37Z" fill="url(#skin)" stroke="#1B3438" stroke-width="5"/>
+<path d="M377 216c35-36 63-70 68-105 21 30 51 49 95 57-15-52-51-86-104-88-59-2-98 42-103 104-4 60 8 108 27 153l34-20-17-101Z" fill="url(#hair)" stroke="#1B2C31" stroke-width="6"/>
+<!-- face details -->
+<path d="M428 245c12-8 24-8 34-1m31-9c11-7 23-7 32-1" stroke="#432C34" stroke-width="4" stroke-linecap="round"/>
+<path d="M438 257c7 6 15 6 22 0m34-5c7 6 15 5 21-1" stroke="#3B3035" stroke-width="3" stroke-linecap="round"/>
+<path d="M477 259c-2 15-7 26-14 33 7 5 14 5 20 1" stroke="#D2786F" stroke-width="3" stroke-linecap="round"/>
+<path d="M458 318c12 10 28 10 41 0" stroke="#B85162" stroke-width="4" stroke-linecap="round"/>
+<path d="M431 289c5 12 15 18 27 17m42-3c10-2 18-9 23-20" stroke="#EE8B83" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+<circle cx="420" cy="279" r="5" fill="#FFDB9D" stroke="#16383C" stroke-width="2"/>
+<!-- neck and dress -->
+<path d="m437 359-4 61 68 20 8-73Z" fill="url(#skin)" stroke="#17373B" stroke-width="5"/>
+<path d="M411 390c-55 4-84 40-99 93l-41 217h329l-52-235c-12-55-46-82-91-83l-20 53-26-45Z" fill="url(#dress)" stroke="#17383D" stroke-width="7"/>
+<path d="m411 393 26 34 25-25m-87 38c44 27 98 29 151 7m-204 94c29 9 50 12 75 9m72 75c24 5 48 3 73-5" stroke="#E7FFF2" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+<path d="M432 428c-13 84-17 181-14 273m27-272c20 86 39 175 68 255" stroke="#087E82" stroke-width="3" opacity=".5"/>
+<!-- reaching arm and hand -->
+<path d="M309 480c-37-16-84-52-117-78l-34-26c-16-13-31-25-41-22-9 3-8 14 2 25l21 22c-19-10-36-26-49-27-14-1-14 13-1 25l25 24c-17-8-30-17-40-14-11 4-4 17 11 28l52 39c45 34 82 62 129 69 25 4 43-8 48-28 4-16-2-29-6-37Z" fill="url(#skin)" stroke="#18383B" stroke-width="6" stroke-linejoin="round"/>
+<path d="m133 395 38 30m-65-5 44 31m-72-6 39 29" stroke="#CE7D72" stroke-width="3" stroke-linecap="round"/>
+<!-- sleeve cuff -->
+<path d="m294 459 42 20-17 43-45-23Z" fill="#FBF7E8" stroke="#18383B" stroke-width="5"/>
+<!-- floating paper plane -->
+<g transform="translate(654 148) rotate(13)"><path d="m0 23 137-21-87 91-10-43L0 23Z" fill="#FFFBEF" stroke="#163F43" stroke-width="5" stroke-linejoin="round"/><path d="m40 50 97-48M40 50l10 43" stroke="#F16A7C" stroke-width="3"/></g>
+<!-- sparkling ink accents -->
+<path d="m682 283 8 17 18 4-17 8-4 18-8-17-18-4 17-8 4-18Zm-560 86 5 12 12 3-12 5-3 12-5-12-12-3 12-5 3-12Z" fill="#FFF0B0" stroke="#17464A" stroke-width="2"/>
+<rect width="900" height="760" fill="url(#grain)" opacity=".13"/>
+</svg>
