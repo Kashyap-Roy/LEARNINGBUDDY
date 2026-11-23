@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b6f7a">
+<meta name="description" content="LearnMate brings curious minds together to explore, practise new skills, and imagine what comes next.">
+<title>LearnMate — learn together, think further</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="assets/logo-mark.png">
+<script src="theme.js"></script>
+<style>
+*{box-sizing:border-box}
+:root{--teal:#0b6f7a;--deep:#0a4a52;--ink:#12292d;--cream:#fbf7ee;--coral:#ff6a5b;--mute:#58706f;--line:#12292d1f;--fh:'Bricolage Grotesque','Geist',sans-serif;--fb:'Geist',system-ui,sans-serif}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font:400 16px/1.55 var(--fb);color:var(--ink);background:var(--cream)}
+h1,h2,h3{font-family:var(--fh);margin:0;line-height:1;letter-spacing:-.04em;font-weight:700}
+a{color:inherit;text-decoration:none}button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.top{position:fixed;inset:0 0 auto;height:68px;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 clamp(16px,3vw,40px)}
+.brand{display:flex;align-items:center;gap:10px;font:700 1.35rem var(--fh);letter-spacing:-.04em}
+body[data-win=home] .brand{color:#fff}
+.brand-mark{width:32px;height:32px;object-fit:contain;display:block}
+nav{display:flex;gap:2px;padding:4px;border-radius:99px;background:#ffffffb8;backdrop-filter:blur(14px);border:1px solid var(--line)}
+nav button{border:0;background:none;padding:.5em 1em;border-radius:99px;cursor:pointer;font-weight:600;font-size:.9rem;color:var(--mute);transition:background .2s,color .2s}
+nav button:hover{color:var(--ink)}nav button[aria-current=true]{background:var(--ink);color:#fff}
+.acct{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:99px;padding:.75em 1.35em;background:var(--coral);color:#fff;font-weight:700;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}.btn.line{background:#fffffff0;color:var(--ink);border:1px solid var(--line)}.btn.sm{padding:.55em 1.1em;font-size:.9rem}
+.win{position:absolute;inset:0;padding:96px clamp(16px,4vw,56px) 32px;overflow:auto;opacity:0;visibility:hidden;transform:scale(.985);transition:opacity .28s,transform .28s,visibility 0s .28s}
+.win.on{opacity:1;visibility:visible;transform:none;transition:opacity .28s,transform .28s}
+.inner{max-width:1120px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center}
+.two{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(20px,4vw,56px);align-items:center}
+.pic{border-radius:24px;overflow:hidden;aspect-ratio:1;max-height:62vh;width:100%}.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.win h2{font-size:clamp(36px,5vw,64px);margin-bottom:12px}.lead{color:var(--mute);max-width:46ch;margin-bottom:22px}
+/* home */
+/* home: a three-scene story the scroll moves through, with pointer depth */
+#home{padding:0;background:var(--deep);scrollbar-width:none}
+#home::-webkit-scrollbar{display:none}
+.tale{height:100vh;position:relative}
+#home.story .tale{height:300vh}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--deep)}
+.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 50%;transform-origin:60% 45%;will-change:transform,opacity;pointer-events:none}
+.shot+.shot{opacity:0}
+.blend{position:absolute;inset:0;z-index:1;pointer-events:none;background:var(--deep);opacity:0}
+.shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#08373dee 0,#0a4a52aa 42%,transparent 75%)}
+.stage:after{content:"";position:absolute;left:0;right:0;bottom:0;height:26%;z-index:2;pointer-events:none;background:linear-gradient(transparent,#04191d99)}
+.dust{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
+.dust i{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:calc(var(--s) * 1.3);background:linear-gradient(160deg,#fff8ea,#ffd9a8);border-radius:1px;opacity:var(--o);filter:blur(.4px);animation:drift var(--d) linear var(--delay) infinite}
+@keyframes drift{from{transform:translate3d(0,0,0) rotate(var(--r))}to{transform:translate3d(var(--dx),-130vh,0) rotate(var(--r2))}}
+.copy{position:absolute;inset:0;z-index:3;display:flex;align-items:center;padding:96px clamp(16px,4vw,56px) 40px;color:#fff;pointer-events:none}
+.copy .inner{width:100%;max-width:1120px;margin:0 auto}
+.copy h1,.copy h2{font-size:clamp(44px,7.6vw,100px);max-width:9ch;margin:0 0 18px}
+.copy p{max-width:38ch;color:#dff7f5;font-size:1.05rem;margin:0 0 26px}
+.copy .row{pointer-events:auto}
+.copy[data-copy="1"],.copy[data-copy="2"]{opacity:0}
+.eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 20px;color:#9fe9e2;font:600 .8rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase}
+.eyebrow:before{content:"";width:22px;height:1px;background:currentColor;opacity:.8}
+.tale-ui{position:absolute;right:clamp(16px,4vw,56px);bottom:32px;z-index:4;display:flex;align-items:center;gap:14px;color:#ffffffb8;font:600 .76rem/1 var(--fb);letter-spacing:.12em;pointer-events:none}
+.tline{width:110px;height:1px;background:#ffffff36;overflow:hidden}
+.tline i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:0 50%}
+.hint{position:absolute;left:50%;bottom:32px;z-index:4;transform:translateX(-50%);margin:0;color:#ffffffa8;font:600 .7rem/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;pointer-events:none}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+/* explore */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+.card{position:relative;border:0;padding:0;border-radius:22px;overflow:hidden;cursor:pointer;aspect-ratio:4/5;max-height:50vh;width:100%;text-align:left;background:var(--deep);transition:transform .2s}
+.card:hover{transform:translateY(-4px)}.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card span{position:absolute;inset:auto 0 0;padding:44px 18px 18px;color:#fff;font:700 1.3rem/1.15 var(--fh);letter-spacing:-.03em;background:linear-gradient(transparent,#000b)}
+.card small{display:block;font:400 .85rem var(--fb);opacity:.85;margin-top:4px}
+/* cursor sway: photos lean toward the pointer */
+.card,.pic{transform-style:preserve-3d;will-change:transform;transition:transform .16s cubic-bezier(.2,.7,.3,1)}
+.card img,.pic img{will-change:transform;transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+/* communities, skills, ideas */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{border:1px solid var(--line);background:#fff8;border-radius:99px;padding:.4em 1em;cursor:pointer;font-weight:600;font-size:.88rem}
+.chip[aria-pressed=true],.chip[aria-selected=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.thread{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.thread[hidden]{display:none}.thread b{display:block;font:600 1.15rem/1.25 var(--fh);letter-spacing:-.02em}.thread small{color:var(--mute)}
+.join{flex:none;border:1px solid var(--ink);background:none;border-radius:99px;padding:.45em 1em;font-weight:600;cursor:pointer}.join[aria-pressed=true]{background:var(--teal);border-color:var(--teal);color:#fff}
+.prompt{padding:14px 16px;border-left:4px solid var(--coral);background:#fff9;border-radius:4px 12px 12px 4px;font-weight:600;margin:14px 0}
+.bar{height:8px;border-radius:9px;background:#12292d14;overflow:hidden;margin:14px 0 6px}.bar i{display:block;height:100%;background:var(--coral);transition:width .45s}
+.meta{display:flex;justify-content:space-between;color:var(--mute);font-size:.88rem;margin-bottom:16px}
+.seed{display:flex;gap:8px;margin:6px 0 14px}.seed input,.send input{flex:1;min-width:0;border:1px solid var(--line);background:#fffc;border-radius:99px;padding:.75em 1.1em}
+.out{padding:18px;border-radius:18px;background:#fffc;font:600 1.15rem/1.4 var(--fh);letter-spacing:-.02em;margin:10px 0 14px;min-height:92px}
+.wall{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.wall span{background:#fff;border-radius:12px;padding:.5em .8em;font-size:.88rem}
+/* buddy */
+.chat{height:min(46vh,360px);overflow:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px 12px}
+.m{max-width:85%;padding:.65em 1em;border-radius:16px}.m.u{align-self:flex-end;background:var(--ink);color:#fff}.m.b{align-self:flex-start;background:#fff;border:1px solid var(--line)}
+.send{display:flex;gap:8px}
+/* theme toggle */
+.theme-toggle{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:50%;border:1px solid var(--line);background:#ffffffb8;color:var(--ink);cursor:pointer;backdrop-filter:blur(14px);transition:transform .15s,background .2s,color .2s}
+.theme-toggle:hover{transform:translateY(-1px)}
+.theme-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-toggle .ic-sun{display:none}
+[data-mode=dark] .theme-toggle .ic-sun{display:block}
+[data-mode=dark] .theme-toggle .ic-moon{display:none}
+/* dark mode */
+[data-mode=dark]{--teal:#3fc4cf;--deep:#062a2f;--ink:#e8f3f1;--cream:#0d1a1c;--coral:#ff7c6d;--mute:#9ab3b0;--line:#ffffff1f;color-scheme:dark}
+[data-mode=dark] body{background:var(--cream)}
+[data-mode=dark] nav{background:#132528cc;border-color:#ffffff1f}
+[data-mode=dark] nav button{color:var(--mute)}
+[data-mode=dark] nav button:hover{color:var(--ink)}
+[data-mode=dark] nav button[aria-current=true]{background:var(--ink);color:#0d1a1c}
+[data-mode=dark] .btn.line{background:#ffffff0f;color:var(--ink);border-color:#ffffff24}
+[data-mode=dark] .theme-toggle{background:#ffffff0f;border-color:#ffffff24}
+[data-mode=dark] .chip{background:#ffffff0f;border-color:#ffffff24}
+[data-mode=dark] .prompt{background:#ffffff0a}
+[data-mode=dark] .bar{background:#ffffff14}
+[data-mode=dark] .seed input,[data-mode=dark] .send input{background:#ffffff0f;border-color:#ffffff24;color:var(--ink)}
+[data-mode=dark] .out{background:#ffffff0a}
+[data-mode=dark] .wall span{background:#ffffff12}
+[data-mode=dark] .m.b{background:#ffffff10;border-color:#ffffff1f}
+[data-mode=dark] .join[aria-pressed=true]{color:#062a2f}
+[data-mode=dark] .chip[aria-pressed=true],[data-mode=dark] .chip[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:#0d1a1c}
+[data-mode=dark] .m.u{color:#0d1a1c}
+[data-mode=dark] #communities{background:#0f2523!important}
+[data-mode=dark] #ideas{background:#241714!important}
+[data-mode=dark] #buddy{background:#0d2224!important}
+[data-mode=dark] #home .shade{background:linear-gradient(90deg,#04191de6 0,#062a2fcc 45%,#04191d22 82%)}
+[data-mode=dark] ::placeholder{color:var(--mute)}
+/* exit into sign in / sign up: the hero greys out and the copy clears, then
+   auth.html picks up the same photo and slides it into its column */
+#home{transition:background-color .45s ease}
+#home .shot{transition:filter .35s ease}
+body.leaving{pointer-events:none}
+body.leaving .win{transition:opacity .28s ease}
+body.leaving #home{background:#fafafa}
+[data-mode=dark] body.leaving #home{background:#0f1012}
+body.leaving #home .shot{filter:grayscale(1) contrast(1.06)}
+[data-mode=dark] body.leaving #home .shot{filter:grayscale(1) contrast(1.06) brightness(.8)}
+body.leaving .win .inner{opacity:0;transform:translateY(-12px);transition:opacity .28s ease,transform .34s ease}
+body.leaving .top{opacity:0;transform:translateY(-14px);transition:opacity .28s ease,transform .34s ease}
+/* window entrance animations */
+@keyframes lmCloseIn{from{opacity:0;filter:blur(8px);transform:translateX(var(--dx,0)) scale(1.12)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes lmRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes lmWipe{from{opacity:.15;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+@keyframes lmFade{from{opacity:0}to{opacity:1}}
+@keyframes lmFocusIn{from{opacity:0;filter:blur(20px) saturate(.6) brightness(1.12);scale:1.12}to{opacity:1;filter:blur(0) saturate(1) brightness(1);scale:1}}
+#home h1 .word{display:inline-block;white-space:nowrap}
+#home h1 .ltr{display:inline-block;transform-origin:50% 100%}
+#home.enter h1 .ltr{animation:lmCloseIn .9s cubic-bezier(.16,.84,.3,1) both;animation-delay:var(--ld,0ms)}
+#home.enter p{animation:lmRise .7s cubic-bezier(.2,.7,.2,1) both .55s}
+#home.enter .row{animation:lmRise .7s cubic-bezier(.2,.7,.2,1) both .72s}
+.win.enter h2{animation:lmWipe .85s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
+.win.enter h3,.win.enter .lead{animation:lmRise .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
+.win.enter :is(.chips,.thread,.prompt,.bar,.meta,.seed,.out,.wall,.chat,.send,.btn){animation:lmRise .65s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
+.win.enter .pic,.win.enter .card{animation:lmFade .9s ease both;animation-delay:var(--d,0ms)}
+#home.enter .btn{animation:none}
+#explore.enter .lead{animation:lmWipe .9s cubic-bezier(.2,.7,.2,1) both .18s}
+#explore.enter .card span{animation:lmRise .7s cubic-bezier(.2,.7,.2,1) both .55s}
+#explore.enter .card img{animation:lmFocusIn 1.15s cubic-bezier(.22,.61,.36,1) both;animation-delay:calc(var(--d,0ms) + 120ms)}
+@media(max-width:900px){.two{grid-template-columns:1fr}.pic{display:none}.cards{grid-template-columns:1fr;gap:10px}.card{aspect-ratio:auto;height:96px;max-height:none}.card span{padding:20px 16px;background:linear-gradient(90deg,#000b,#0004)}.card small{display:none}
+ nav{position:fixed;inset:auto 10px 10px;justify-content:space-between;overflow-x:auto;background:#fffffff2}nav button{padding:.5em .7em;font-size:.8rem;white-space:nowrap}.win{padding-bottom:90px}.acct .line{display:none}.copy{padding:84px 20px 132px}.copy h1,.copy h2{font-size:clamp(38px,11vw,60px)}.tale-ui,.hint{display:none}}
+@media(max-width:900px){[data-mode=dark] nav{background:#132528f2}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#home" data-go="home"><img src="assets/logo-mark.png" alt="" class="brand-mark" aria-hidden="true">learnmate</a>
+  <nav aria-label="Windows">
+    <button data-go="home">Home</button><button data-go="explore">Explore</button><button data-go="communities">Communities</button><button data-go="skills">Skill studio</button><button data-go="ideas">Idea lab</button><button data-go="buddy">Buddy</button>
+  </nav>
+  <div class="acct"><button class="theme-toggle" data-theme-toggle type="button" aria-pressed="false" aria-label="Switch to dark mode" title="Dark mode"><svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg><svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><a class="btn line sm" id="si" href="auth.html">Sign in</a><a class="btn sm" id="su" href="auth.html?mode=signup">Try it free</a></div>
+</header>
+
+<main>
+<section class="win" id="home" aria-label="Home">
+  <div class="tale">
+    <div class="stage">
+      <img class="shot" src="assets/hero-wide.webp" alt="">
+      <img class="shot" src="assets/astronaut-generated.webp" alt="">
+      <img class="shot" src="assets/collective-thinking.webp" alt="">
+      <div class="blend" aria-hidden="true"></div>
+      <div class="shade" aria-hidden="true"></div>
+      <div class="dust" aria-hidden="true"></div>
+
+      <div class="copy" data-copy="0"><div class="inner">
+        <p class="eyebrow">A study buddy for curious minds</p>
+        <h1>Make learning feel like magic.</h1>
+        <p class="lead">Meet the study buddy that makes big ideas click. Ask anything, follow the why, and find your own way through.</p>
+        <div class="row"><button class="btn" data-go="explore">Explore</button><a class="btn line" href="auth.html?mode=signup">Create an account</a></div>
+      </div></div>
+
+      <div class="copy" data-copy="1"><div class="inner">
+        <p class="eyebrow">Ask anything</p>
+        <h2>Follow the why.</h2>
+        <p class="lead">Stuck on a question? Your buddy works through it with you — step by step, in words that click.</p>
+        <div class="row"><button class="btn" data-go="buddy">Talk it through</button><button class="btn line" data-go="explore">Explore questions</button></div>
+      </div></div>
+
+      <div class="copy" data-copy="2"><div class="inner">
+        <p class="eyebrow">Learn together</p>
+        <h2>Big questions, better together.</h2>
+        <p class="lead">Small circles around one good question. Learn out loud with people who ask the same things.</p>
+        <div class="row"><button class="btn" data-go="communities">Join a circle</button><button class="btn line" data-go="ideas">Open the idea lab</button></div>
+      </div></div>
+
+      <div class="tale-ui" aria-hidden="true"><span class="count"><b>01</b> / 03</span><span class="tline"><i></i></span></div>
+      <div class="hint" aria-hidden="true">Scroll to explore</div>
+    </div>
+  </div>
+</section>
+
+<section class="win" id="explore" aria-label="Explore"><div class="inner">
+  <h2>Pick a rabbit hole.</h2><p class="lead">Science, patterns, people. Choose one and your buddy will start the conversation.</p>
+  <div class="cards">
+    <button class="card" data-ask="Why is the sky blue?"><img src="assets/astronaut-generated.webp" alt=""><span>Wonder about science<small>Why is the sky blue?</small></span></button>
+    <button class="card" data-ask="Why do patterns show up everywhere in nature?"><img src="assets/mind-garden.webp" alt=""><span>Find the patterns<small>Why do patterns show up in nature?</small></span></button>
+    <button class="card" data-ask="How do groups think better than one person?"><img src="assets/collective-thinking.webp" alt=""><span>Think with others<small>How do groups think better?</small></span></button>
+  </div></div>
+</section>
+
+<section class="win" id="communities" aria-label="Communities" style="background:#e1f0ea"><div class="inner two">
+  <div class="pic"><img src="assets/collective-thinking.webp" alt="Layered figures inside an eye"></div>
+  <div><h2>Many minds, more possibility.</h2><p class="lead">Small circles around one big question.</p>
+    <div class="chips" role="group" aria-label="Filter"><button class="chip" aria-pressed="true" data-f="all">All</button><button class="chip" aria-pressed="false" data-f="science">Science</button><button class="chip" aria-pressed="false" data-f="creative">Creative</button><button class="chip" aria-pressed="false" data-f="study">Study</button></div>
+    <div class="thread" data-t="science"><div><b>Could plants recognise their neighbours?</b><small>Science · 18 people</small></div><button class="join" aria-pressed="false">Join</button></div>
+    <div class="thread" data-t="creative"><div><b>Design a city that makes room for daydreaming</b><small>Creative · 12 people</small></div><button class="join" aria-pressed="false">Join</button></div>
+    <div class="thread" data-t="study"><div><b>Explain a hard idea without its jargon</b><small>Study · 9 people</small></div><button class="join" aria-pressed="false">Join</button></div>
+  </div></div>
+</section>
+
+<section class="win" id="skills" aria-label="Skill studio"><div class="inner two">
+  <div class="pic"><img src="assets/mind-garden.webp" alt="A mind with ideas growing through it"></div>
+  <div><h2>Build a mind that keeps opening.</h2>
+    <div class="chips" role="tablist" aria-label="Skill" id="tabs"></div>
+    <h3 id="xt" style="font-size:1.6rem"></h3><p class="lead" id="xd" style="margin:8px 0 0"></p><div class="prompt" id="xp"></div>
+    <div class="bar"><i id="pb" style="width:18%"></i></div><div class="meta"><span id="pp">18%</span><span id="rc">0 reps today</span></div>
+    <button class="btn" id="rep">Mark one rep done</button></div></div>
+</section>
+
+<section class="win" id="ideas" aria-label="Idea lab" style="background:#fde4db"><div class="inner two">
+  <div class="pic"><img src="assets/curiosity-poster.webp" alt="Curiosity poster with a close-up eye" style="object-position:center 30%"></div>
+  <div><h2>Give an idea a little room.</h2>
+    <div class="seed"><input id="seed" placeholder="What are you thinking about?" aria-label="Idea seed"><button class="btn" id="spark">Spark</button></div>
+    <div class="chips" role="group" aria-label="Lens"><button class="chip" aria-pressed="true" data-m="flip">Flip it</button><button class="chip" aria-pressed="false" data-m="combine">Combine it</button><button class="chip" aria-pressed="false" data-m="scale">Scale it</button></div>
+    <div class="out" id="out" aria-live="polite">Pick a lens and press Spark.</div>
+    <button class="btn line sm" id="pin" disabled>Pin this thought</button><div class="wall" id="wall"></div></div></div>
+</section>
+
+<section class="win" id="buddy" aria-label="Buddy" style="background:#d7ecea"><div class="inner" style="max-width:720px">
+  <h2>One question, new worlds.</h2><p class="lead">A front-end preview of your study buddy. Real answers arrive with the full version.</p>
+  <div class="chat" id="chat" aria-live="polite"><div class="m u">Why is the sky blue?</div><div class="m b">Sunlight looks white but holds every colour. Air molecules scatter blue light the most, so the whole sky glows blue.</div></div>
+  <form class="send" id="sendf"><input id="q" placeholder="Ask your next why…" aria-label="Ask your buddy" autocomplete="off"><button class="btn">Ask</button></form></div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],NAMES=['home','explore','communities','skills','ideas','buddy'];
+function splitHero(){
+  const h=$('#home h1');if(!h||h.dataset.split)return;
+  const words=h.textContent.trim().split(/\s+/),total=words.join('').length;
+  h.setAttribute('aria-label',words.join(' '));
+  h.textContent='';
+  let i=0;
+  words.forEach((word,wi)=>{
+    const w=document.createElement('span');w.className='word';w.setAttribute('aria-hidden','true');
+    [...word].forEach(ch=>{
+      const s=document.createElement('span');s.className='ltr';s.textContent=ch;
+      s.style.setProperty('--dx',total>1?((i/(total-1)-.5)*1.6).toFixed(2)+'em':'0em');
+      s.style.setProperty('--ld',(i*18)+'ms');
+      w.append(s);i++;
+    });
+    h.append(w);
+    if(wi<words.length-1)h.append(document.createTextNode(' '));
+  });
+  h.dataset.split='1';
+}
+function animateWin(w){
+  w.classList.remove('enter');
+  if(w.id!=='home'){
+    [...w.querySelectorAll('h2,.lead,h3,.chips,.thread,.prompt,.bar,.meta,.seed,.out,.wall,.chat,.send,.btn,.pic,.card')].forEach((el,i)=>{
+      el.style.setProperty('--d',Math.min(i*60,420)+'ms');
+    });
+  }
+  void w.offsetWidth;
+  w.classList.add('enter');
+}
+function show(n,push){if(!NAMES.includes(n))n='home';$$('.win').forEach(w=>w.classList.toggle('on',w.id===n));$$('nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.go===n));
+ $$('.win').forEach(w=>w.inert=w.id!==n);document.body.dataset.win=n;if(push!==false)history.replaceState(null,'','#'+n);const cur=$('#'+n);cur.scrollTop=0;
+ animateWin(cur)}
+splitHero();
+$$('[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.go)}));
+window.addEventListener('hashchange',()=>show(location.hash.slice(1),false));show(location.hash.slice(1)||'home',false);
+$$('[data-ask]').forEach(c=>c.onclick=()=>{show('buddy');$('#q').value=c.dataset.ask;$('#q').focus()});
+/* Cursor sway: each photo tilts and drifts toward the pointer, its image counter-moves for depth. */
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  $$('.card,.pic').forEach(el=>{
+    const img=el.querySelector('img'),card=el.classList.contains('card');
+    const tilt=card?5.5:4,drift=card?5:4;
+    let px=0,py=0,raf=0;
+    const draw=()=>{
+      raf=0;
+      const lift=card?-4:0;
+      el.style.transform=`perspective(900px) translate3d(${(px*drift).toFixed(2)}px,${(py*drift+lift).toFixed(2)}px,0) rotateX(${(py*tilt).toFixed(2)}deg) rotateY(${(-px*tilt).toFixed(2)}deg)`;
+      if(img)img.style.transform=`translate3d(${(-px*drift*1.4).toFixed(2)}px,${(-py*drift*1.4).toFixed(2)}px,0) scale(1.07)`;
+    };
+    el.addEventListener('pointermove',e=>{
+      if(e.pointerType==='touch')return;
+      const r=el.getBoundingClientRect();
+      px=Math.max(-.5,Math.min(.5,(e.clientX-r.left)/r.width-.5));
+      py=Math.max(-.5,Math.min(.5,(e.clientY-r.top)/r.height-.5));
+      if(!raf)raf=requestAnimationFrame(draw);
+    });
+    el.addEventListener('pointerleave',()=>{
+      px=py=0;if(raf){cancelAnimationFrame(raf);raf=0}
+      el.style.transform='';if(img)img.style.transform='';
+    });
+  });
+}
+$$('[data-f]').forEach(b=>b.onclick=()=>{$$('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b));$$('.thread').forEach(t=>t.hidden=b.dataset.f!=='all'&&t.dataset.t!==b.dataset.f)});
+$$('.join').forEach(b=>b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);b.textContent=on?'Joined':'Join'});
+const SK={focus:['Focus','Stay with one good question.','Write what you know, then name the part that still feels blurry.','What do I know? What am I still wondering?'],explain:['Explain','Make a hard idea feel simple.','Explain something you recently learned in everyday words.','Can I explain it without the textbook’s key terms?'],invent:['Invent','Give the ordinary a new job.','Imagine three surprising uses for a familiar object.','What else could this become if its usual job vanished?'],listen:['Listen','Understand before you answer.','Restate a view you disagree with, fairly, then add one question.','Would they recognise their idea in my summary?']};
+$('#tabs').innerHTML=Object.entries(SK).map(([k,v],i)=>`<button class="chip" role="tab" data-k="${k}" aria-selected="${!i}">${v[0]}</button>`).join('');
+$$('#tabs button').forEach(b=>b.onclick=()=>{$$('#tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));const s=SK[b.dataset.k];$('#xt').textContent=s[1];$('#xd').textContent=s[2];$('#xp').textContent=s[3]});$('#tabs button').click();
+let reps=0,pct=18;$('#rep').onclick=()=>{pct=Math.min(100,pct+8);reps++;$('#pb').style.width=pct+'%';$('#pp').textContent=pct+'%';$('#rc').textContent=reps+(reps===1?' rep today':' reps today');$('#rep').textContent=pct===100?'Practice complete':'Rep saved. Keep going'};
+let mode='flip',idea='';const P={flip:t=>`What if ${t} worked in the exact opposite way from what everyone expects?`,combine:t=>`Combine ${t} with a place, creature or tool that seems unrelated. What new thing could exist?`,scale:t=>`Imagine ${t} a hundred times smaller, or larger. What becomes possible, and what gets harder?`};
+$$('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;$$('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+const spark=()=>{idea=P[mode]($('#seed').value.trim()||'a curious question');$('#out').textContent=idea;$('#pin').disabled=false};$('#spark').onclick=spark;$('#seed').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();spark()}};
+$('#pin').onclick=()=>{const s=document.createElement('span');s.textContent=idea;$('#wall').prepend(s);$('#pin').disabled=true};
+$('#sendf').onsubmit=e=>{e.preventDefault();const q=$('#q').value.trim();if(!q)return;const add=(c,t)=>{const d=document.createElement('div');d.className='m '+c;d.textContent=t;$('#chat').append(d);$('#chat').scrollTop=1e9};add('u',q);$('#q').value='';setTimeout(()=>add('b',`Good one. A full answer to “${q}” would give a clear explanation, an example and a next question. This is a preview, so real answers come later.`),400)};
+try{if(JSON.parse(localStorage.getItem('lm_session')||'null')){$('#si').remove();$('#su').textContent='Open LearnMate';$('#su').href='app.html'}}catch(e){}
+/* Home story: the scroll moves a camera through three scenes, the pointer adds
+   depth. The camera state is handed to auth.html so the photo carries over. */
+(() => {
+  const home=$('#home');
+  if(!home) return;
+  const tale=home.querySelector('.tale'),shots=[...home.querySelectorAll('.shot')];
+  const copies=[...home.querySelectorAll('.copy')];
+  const count=home.querySelector('.count b'),bar=home.querySelector('.tline i'),hint=home.querySelector('.hint'),blend=home.querySelector('.blend');
+  if(!tale||shots.length<2) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  home.classList.add('story');
+  const N=shots.length,clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const cam={src:shots[0].getAttribute('src'),zoom:1.04,dx:0,dy:0};
+  window.__cam=cam;
+  let px=0,py=0,tx=0,ty=0,active=-1;
+  function frame(now){
+    const max=Math.max(1,tale.offsetHeight-innerHeight);
+    const p=clamp(home.scrollTop/max,0,1),t=p*(N-1);
+    let best=0,bestO=-1;
+    shots.forEach((s,i)=>{
+      const o=clamp(1-Math.abs(t-i),0,1);
+      const local=clamp(t-i,0,1);
+      const zoom=1.04+local*.17+Math.sin(now/9000+i)*.005;
+      const dx=(local-.5)*22+px*13,dy=(local-.5)*9+py*9;
+      s.style.opacity=o.toFixed(3);
+      s.style.transform=`translate3d(${dx.toFixed(2)}px,${dy.toFixed(2)}px,0) scale(${zoom.toFixed(4)})`;
+      s.style.visibility=o>.01?'visible':'hidden';
+      if(o>bestO){bestO=o;best=i;cam.src=s.getAttribute('src');cam.zoom=zoom;cam.dx=dx;cam.dy=dy}
+    });
+    copies.forEach((c,i)=>{
+      const o=clamp((.5-Math.abs(t-i))/.22,0,1);
+      c.style.opacity=o.toFixed(3);
+      c.style.transform=`translate3d(${(px*-11).toFixed(2)}px,${((i<t?-1:1)*(1-o)*22- py*9).toFixed(2)}px,0)`;
+      c.inert=o<.55;
+    });
+    if(best!==active){active=best;if(count)count.textContent=String(best+1).padStart(2,'0')}
+    if(bar)bar.style.transform=`scaleX(${p.toFixed(4)})`;
+    if(blend)blend.style.opacity=(clamp(1-Math.abs(t-Math.floor(t)-.5)*2,0,1)*.42).toFixed(3);
+    if(hint)hint.style.opacity=String(clamp(1-p*10,0,1));
+  }
+  const loop=now=>{
+    px+=(tx-px)*.08;py+=(ty-py)*.08;
+    if(document.body.dataset.win==='home'&&!document.body.classList.contains('leaving'))frame(now);
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+  window.addEventListener('pointermove',e=>{
+    if(e.pointerType==='touch')return;
+    tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2;
+  },{passive:true});
+  home.addEventListener('scroll',()=>frame(performance.now()),{passive:true});
+  addEventListener('resize',()=>frame(performance.now()));
+  const dust=home.querySelector('.dust');
+  if(dust)for(let i=0;i<16;i++){
+    const el=document.createElement('i');
+    const s=2+Math.random()*5;
+    el.style.cssText=`--x:${(Math.random()*100).toFixed(2)}%;--y:${(30+Math.random()*80).toFixed(2)}%;--s:${s.toFixed(1)}px;--o:${(.12+Math.random()*.22).toFixed(2)};--d:${(14+Math.random()*16).toFixed(1)}s;--delay:${(-Math.random()*30).toFixed(1)}s;--r:${(Math.random()*90-45).toFixed(0)}deg;--r2:${(Math.random()*140-70).toFixed(0)}deg;--dx:${(Math.random()*120-60).toFixed(0)}px`;
+    dust.append(el);
+  }
+  frame(performance.now());
+})();
+/* Sign in / sign up: the hero greys and the copy clears, then the sign-in page
+   takes the same photo and slides it into its column while the panel arrives. */
+const motionOK=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+$$('a[href^="auth.html"]').forEach(a=>a.addEventListener('click',e=>{
+  if(!motionOK||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+  e.preventDefault();
+  try{sessionStorage.setItem('lm_hero',JSON.stringify(document.body.dataset.win==='home'?window.__cam||null:null))}catch(err){}
+  document.body.classList.add('leaving');
+  setTimeout(()=>location.href=a.getAttribute('href'),420);
+}));
+window.addEventListener('pageshow',e=>{if(e.persisted)document.body.classList.remove('leaving')});
+</script>
+</body>
+</html>

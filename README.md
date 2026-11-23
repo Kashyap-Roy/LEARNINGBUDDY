@@ -16,6 +16,14 @@ Explore the deployed prototype: [learnmate-ai-w44n.onrender.com](https://learnma
 - Idea Lab with Flip, Combine, and Scale brainstorming lenses and a local thought wall.
 - Learning-buddy chat preview with sample front-end responses.
 
+## Accounts and age-based looks
+
+- `auth.html` handles sign in and sign up. Sign-up asks for age; under-13s also get a parent/guardian email field.
+- The look follows age: **under 10** colourful and playful, **10 to 19** soft and aesthetic, **20+** monochrome and minimal. `themes.css` holds all three; `app.html` is the signed-in experience.
+- `auth.js` is the whole account layer (accounts live in the browser's localStorage until a backend exists). Swap its functions for API calls later; the pages only use `window.Auth`.
+- **Google sign-in:** put your OAuth Web Client ID in `config.js`. Age is read from the Google account's birthday (People API, `user.birthday.read` scope). If Google has no full birthday on file, the user is asked for their age. With no Client ID set, the Google button opens a preview chooser with sample accounts.
+- Admin preview: on the sign-in page, enter `thrivetribeadmin1117` as the email and the current time (24-hour `HH:MM`) as the password, then pick any look. Admins also get a look switcher in the app. This check runs in the browser, so move it server-side before launch.
+
 ## Run locally
 
 No package installation or build step is required. Open `index.html` in a browser, or serve the folder locally:
@@ -59,4 +67,4 @@ LEARNINGBUDDY/
 
 ## Prototype notes
 
-Community joins, skill progress, saved ideas, and chat replies are browser-side demonstrations. They do not connect to an account, community service, database, or live AI model, and they are not persisted between visits. Google Fonts load from the web when available; system font fallbacks are provided.
+Community joins, skill progress, saved ideas, and chat replies are browser-side demonstrations. Accounts are browser-only for now. They do not connect to a community service, database, or live AI model, and they are not persisted between visits. Google Fonts load from the web when available; system font fallbacks are provided.
