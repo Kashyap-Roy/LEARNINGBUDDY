@@ -2,11 +2,17 @@
 <html lang="en" data-theme="adult">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b6f7a">
 <title>LearnMate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Fredoka:wght@500..700&family=Geist:wght@400..700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes.css">
-<link rel="icon" type="image/png" href="assets/logo-mark.png">
+<link rel="icon" id="favicon-ico" href="favicon.ico" sizes="any">
+<link rel="icon" id="favicon-32" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" id="favicon-16" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="icon" id="favicon-mark" type="image/png" href="assets/logo-mark.png">
+<link rel="apple-touch-icon" id="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 <script src="theme.js"></script>
 <script src="auth.js"></script>
 <script>{const m=location.hash.match(/lm=([^&]+)/);if(m){try{Auth.adopt(JSON.parse(decodeURIComponent(m[1])))}catch(e){}history.replaceState(null,'',location.pathname)}}

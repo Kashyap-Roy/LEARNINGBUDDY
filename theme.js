@@ -13,6 +13,33 @@
   var mode = choice === 'dark' || choice === 'light' ? choice : (mq && mq.matches ? 'dark' : 'light');
   root.dataset.mode = mode;
 
+  function updateIcons(dark) {
+    var ico = document.getElementById('favicon-ico') || document.querySelector('link[rel="icon"][sizes="any"]');
+    if (ico) ico.href = dark ? 'assets/favicon-dark.ico' : 'favicon.ico';
+
+    var f32 = document.getElementById('favicon-32') || document.querySelector('link[rel="icon"][sizes="32x32"]');
+    if (f32) f32.href = dark ? 'assets/favicon-dark-32x32.png' : 'assets/favicon-32x32.png';
+
+    var f16 = document.getElementById('favicon-16') || document.querySelector('link[rel="icon"][sizes="16x16"]');
+    if (f16) f16.href = dark ? 'assets/favicon-dark-16x16.png' : 'assets/favicon-16x16.png';
+
+    var fmark = document.getElementById('favicon-mark') || document.querySelector('link[rel="icon"]:not([sizes])');
+    if (fmark) fmark.href = dark ? 'assets/logo-mark-dark.png' : 'assets/logo-mark.png';
+
+    var apple = document.getElementById('apple-touch-icon') || document.querySelector('link[rel="apple-touch-icon"]');
+    if (apple) apple.href = dark ? 'assets/apple-touch-icon-dark.png' : 'assets/apple-touch-icon.png';
+
+    var brandMarks = document.querySelectorAll('.brand-mark');
+    for (var i = 0; i < brandMarks.length; i++) {
+      brandMarks[i].src = dark ? 'assets/logo-mark-dark.png' : 'assets/logo-mark.png';
+    }
+
+    var logos = document.querySelectorAll('.logo');
+    for (var j = 0; j < logos.length; j++) {
+      logos[j].src = dark ? 'assets/logo-dark.png' : 'assets/logo.png';
+    }
+  }
+
   function paint() {
     var dark = root.dataset.mode === 'dark';
     var label = dark ? 'Switch to light mode' : 'Switch to dark mode';
@@ -22,6 +49,7 @@
       buttons[i].setAttribute('aria-label', label);
       buttons[i].setAttribute('title', dark ? 'Light mode' : 'Dark mode');
     }
+    updateIcons(dark);
   }
 
   function toggle() {
@@ -35,6 +63,8 @@
     var buttons = document.querySelectorAll('[data-theme-toggle]');
     for (var i = 0; i < buttons.length; i++) buttons[i].addEventListener('click', toggle);
   }
+
+  try { updateIcons(root.dataset.mode === 'dark'); } catch (e) {}
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
   else ready();

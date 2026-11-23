@@ -6,7 +6,12 @@
 <title>LearnMate — learn together, think further</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="assets/logo-mark.png">
+<link rel="icon" id="favicon-ico" href="favicon.ico" sizes="any">
+<link rel="icon" id="favicon-32" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" id="favicon-16" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="icon" id="favicon-mark" type="image/png" href="assets/logo-mark.png">
+<link rel="apple-touch-icon" id="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 <script src="theme.js"></script>
 <style>
 *{box-sizing:border-box}
@@ -33,42 +38,626 @@ nav button:hover{color:var(--ink)}nav button[aria-current=true]{background:var(-
 .pic{border-radius:24px;overflow:hidden;aspect-ratio:1;max-height:62vh;width:100%}.pic img{width:100%;height:100%;object-fit:cover;display:block}
 .win h2{font-size:clamp(36px,5vw,64px);margin-bottom:12px}.lead{color:var(--mute);max-width:46ch;margin-bottom:22px}
 /* home */
-/* home: a three-scene story the scroll moves through, with pointer depth */
-#home{padding:0;background:var(--deep);scrollbar-width:none}
+/* home: a three-scene story with smooth cinematic transitions and pointer depth */
+#home{padding:0;background:var(--deep);scrollbar-width:none;overflow:hidden}
 #home::-webkit-scrollbar{display:none}
-.tale{height:100vh;position:relative}
-#home.story .tale{height:300vh}
-.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--deep)}
-.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 50%;transform-origin:60% 45%;will-change:transform,opacity;pointer-events:none}
-.shot+.shot{opacity:0}
-.blend{position:absolute;inset:0;z-index:1;pointer-events:none;background:var(--deep);opacity:0}
-.shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#08373dee 0,#0a4a52aa 42%,transparent 75%)}
-.stage:after{content:"";position:absolute;left:0;right:0;bottom:0;height:26%;z-index:2;pointer-events:none;background:linear-gradient(transparent,#04191d99)}
-.dust{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
+.tale{height:100vh;position:relative;overflow:hidden}
+.stage{position:relative;height:100vh;overflow:hidden;background:var(--deep)}
+.shot{
+  position:absolute;
+  inset:-4% -4%;
+  width:108%;
+  height:108%;
+  object-fit:cover;
+  object-position:70% 50%;
+  transform-origin:55% 45%;
+  opacity:0;
+  visibility:hidden;
+  transform:translate3d(var(--px,0px),var(--py,0px),0) scale(1.09);
+  filter:grayscale(0) contrast(1);
+  transition:opacity 1.15s cubic-bezier(.16,1,.3,1),transform 1.5s cubic-bezier(.16,1,.3,1),visibility 1.15s cubic-bezier(.16,1,.3,1),filter .7s cubic-bezier(.22,1,.36,1);
+  will-change:transform,opacity,filter;
+  pointer-events:none;
+  z-index:1;
+}
+.shot.active{
+  opacity:1;
+  visibility:visible;
+  transform:translate3d(var(--px,0px),var(--py,0px),0) scale(1.025);
+  z-index:2;
+  filter:grayscale(0) contrast(1);
+  transition:opacity 1.15s cubic-bezier(.16,1,.3,1),transform 1.5s cubic-bezier(.16,1,.3,1),visibility 1.15s cubic-bezier(.16,1,.3,1),filter .7s cubic-bezier(.22,1,.36,1);
+}
+.shot.past{
+  opacity:0;
+  visibility:visible;
+  transform:translate3d(var(--px,0px),var(--py,0px),0) scale(0.985);
+  z-index:1;
+  transition:opacity .95s cubic-bezier(.22,1,.36,1),transform 1.3s cubic-bezier(.22,1,.36,1),visibility .95s;
+}
+.blend{display:none}
+.shade{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(90deg,#08373dee 0,#0a4a52aa 42%,transparent 75%)}
+.stage:after{content:"";position:absolute;left:0;right:0;bottom:0;height:26%;z-index:3;pointer-events:none;background:linear-gradient(transparent,#04191d99)}
+.dust{position:absolute;inset:0;z-index:4;overflow:hidden;pointer-events:none}
 .dust i{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:calc(var(--s) * 1.3);background:linear-gradient(160deg,#fff8ea,#ffd9a8);border-radius:1px;opacity:var(--o);filter:blur(.4px);animation:drift var(--d) linear var(--delay) infinite}
 @keyframes drift{from{transform:translate3d(0,0,0) rotate(var(--r))}to{transform:translate3d(var(--dx),-130vh,0) rotate(var(--r2))}}
-.copy{position:absolute;inset:0;z-index:3;display:flex;align-items:center;padding:96px clamp(16px,4vw,56px) 40px;color:#fff;pointer-events:none}
+
+.copy{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  padding:96px clamp(16px,4vw,56px) 40px;
+  color:#fff;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translate3d(var(--cx,0px),var(--cy,0px),0);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),visibility .6s;
+}
 .copy .inner{width:100%;max-width:1120px;margin:0 auto}
+.copy .eyebrow,
+.copy h1,
+.copy h2,
+.copy .lead,
+.copy .row{
+  opacity:0;
+  transform:translate3d(0,24px,0);
+  transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1);
+  will-change:transform,opacity;
+}
+.copy.active{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.copy.active .eyebrow{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  transition-delay:.12s;
+}
+.copy.active h1,
+.copy.active h2{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  transition-delay:.22s;
+}
+.copy.active .lead{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  transition-delay:.32s;
+}
+.copy.active .row{
+  opacity:1;
+  transform:translate3d(0,0,0);
+  transition-delay:.42s;
+  pointer-events:auto;
+}
+.copy.past{
+  opacity:0;
+  visibility:visible;
+  pointer-events:none;
+  transition:opacity .45s ease,visibility .45s;
+}
+.copy.past .eyebrow,
+.copy.past h1,
+.copy.past h2,
+.copy.past .lead,
+.copy.past .row{
+  opacity:0;
+  transform:translate3d(0,-18px,0);
+  transition:opacity .4s ease,transform .45s ease;
+}
 .copy h1,.copy h2{font-size:clamp(44px,7.6vw,100px);max-width:9ch;margin:0 0 18px}
 .copy p{max-width:38ch;color:#dff7f5;font-size:1.05rem;margin:0 0 26px}
-.copy .row{pointer-events:auto}
-.copy[data-copy="1"],.copy[data-copy="2"]{opacity:0}
 .eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 20px;color:#9fe9e2;font:600 .8rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase}
 .eyebrow:before{content:"";width:22px;height:1px;background:currentColor;opacity:.8}
-.tale-ui{position:absolute;right:clamp(16px,4vw,56px);bottom:32px;z-index:4;display:flex;align-items:center;gap:14px;color:#ffffffb8;font:600 .76rem/1 var(--fb);letter-spacing:.12em;pointer-events:none}
+.tale-ui{position:absolute;right:clamp(16px,4vw,56px);bottom:32px;z-index:6;display:flex;align-items:center;gap:14px;color:#ffffffb8;font:600 .76rem/1 var(--fb);letter-spacing:.12em;cursor:pointer;pointer-events:auto;user-select:none;transition:color .2s}
+.tale-ui:hover{color:#fff}
 .tline{width:110px;height:1px;background:#ffffff36;overflow:hidden}
-.tline i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:0 50%}
-.hint{position:absolute;left:50%;bottom:32px;z-index:4;transform:translateX(-50%);margin:0;color:#ffffffa8;font:600 .7rem/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;pointer-events:none}
+.tline i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:0 50%;transition:transform .75s cubic-bezier(.16,1,.3,1)}
+.hint{position:absolute;left:50%;bottom:32px;z-index:6;transform:translateX(-50%);margin:0;color:#ffffffa8;font:600 .7rem/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;cursor:pointer;pointer-events:auto;user-select:none;transition:opacity .4s ease,color .2s,transform .3s ease}
+.hint:hover{color:#fff}
 .row{display:flex;gap:12px;flex-wrap:wrap}
-/* explore */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
-.card{position:relative;border:0;padding:0;border-radius:22px;overflow:hidden;cursor:pointer;aspect-ratio:4/5;max-height:50vh;width:100%;text-align:left;background:var(--deep);transition:transform .2s}
-.card:hover{transform:translateY(-4px)}.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.card span{position:absolute;inset:auto 0 0;padding:44px 18px 18px;color:#fff;font:700 1.3rem/1.15 var(--fh);letter-spacing:-.03em;background:linear-gradient(transparent,#000b)}
-.card small{display:block;font:400 .85rem var(--fb);opacity:.85;margin-top:4px}
-/* cursor sway: photos lean toward the pointer */
+/* explore page with interstellar backdrop */
+#explore{
+  position:absolute;
+  inset:0;
+  padding:88px clamp(16px,3vw,44px) 56px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:#03070d;
+  color:#fff;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,190,100,0.3) transparent;
+}
+#explore::-webkit-scrollbar{width:8px}
+#explore::-webkit-scrollbar-track{background:transparent}
+#explore::-webkit-scrollbar-thumb{background:rgba(255,190,100,0.25);border-radius:99px}
+#explore::-webkit-scrollbar-thumb:hover{background:rgba(255,190,100,0.45)}
+.explore-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.explore-bg-img{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:130vh;
+  object-fit:cover;
+  object-position:center 20%;
+  transform:scale(1.08);
+  filter:brightness(0.9) contrast(1.12);
+  will-change:transform;
+}
+.explore-backdrop:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 20%,rgba(0,0,0,0.1) 0%,rgba(3,7,13,0.58) 50%,rgba(2,5,9,0.94) 100%),
+              linear-gradient(180deg,rgba(3,7,12,0.25) 0%,rgba(2,5,9,0.7) 35%,rgba(2,4,8,0.96) 90%);
+}
+#explore .inner{
+  position:relative;
+  z-index:2;
+  max-width:1420px;
+  margin:0 auto;
+  min-height:auto;
+  justify-content:flex-start;
+}
+#explore h2{
+  color:#fff;
+  font-size:clamp(36px,4.5vw,56px);
+  text-shadow:0 4px 18px rgba(0,0,0,0.8);
+}
+#explore .lead{
+  color:rgba(255,255,255,0.78);
+  font-size:1.05rem;
+  max-width:54ch;
+  text-shadow:0 2px 10px rgba(0,0,0,0.7);
+  margin-bottom:20px;
+}
+#explore .cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-bottom:34px;
+}
+#explore .card{
+  position:relative;
+  border:1px solid rgba(255,215,140,0.22);
+  padding:0;
+  border-radius:22px;
+  overflow:hidden;
+  cursor:pointer;
+  height:210px;
+  max-height:none;
+  aspect-ratio:auto;
+  width:100%;
+  text-align:left;
+  background:var(--deep);
+  box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 20px rgba(255,180,80,0.1);
+  transition:transform .24s cubic-bezier(.2,.8,.3,1),border-color .24s,box-shadow .24s;
+}
+#explore .card:hover{
+  transform:translateY(-4px) scale(1.01);
+  border-color:rgba(255,215,140,0.6);
+  box-shadow:0 16px 36px rgba(0,0,0,0.6),0 0 26px rgba(255,180,80,0.22);
+}
+#explore .card img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+#explore .card span{
+  position:absolute;
+  inset:auto 0 0;
+  padding:26px 18px 18px;
+  color:#fff;
+  font:700 1.3rem/1.15 var(--fh);
+  letter-spacing:-.03em;
+  background:linear-gradient(180deg,transparent 0%,rgba(3,7,14,0.85) 60%,rgba(2,5,10,0.98) 100%);
+}
+#explore .card small{
+  display:block;
+  font:400 .85rem var(--fb);
+  opacity:.85;
+  margin-top:4px;
+}
+
+/* Explore Rabbit Hole Grid (5 rows x 6 columns) */
+.grid-section{
+  margin-top:16px;
+}
+.grid-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+.grid-title{
+  font-family:var(--fh);
+  font-size:clamp(22px,2.4vw,32px);
+  margin:0 0 4px;
+  letter-spacing:-0.03em;
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,0.7);
+}
+.grid-sub{
+  margin:0;
+  color:rgba(255,255,255,0.7);
+  font-size:0.92rem;
+}
+.grid-badge{
+  padding:5px 14px;
+  border-radius:99px;
+  background:rgba(255,190,100,0.14);
+  border:1px solid rgba(255,190,100,0.3);
+  color:#ffca7a;
+  font-size:0.8rem;
+  font-weight:600;
+  letter-spacing:0.04em;
+  white-space:nowrap;
+}
+.rabbit-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  min-height:480px;
+  transition:opacity .22s ease;
+}
+.r-frame{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:15px 14px;
+  min-height:148px;
+  border-radius:15px;
+  border:1px solid rgba(255,220,160,0.16);
+  background:rgba(10,20,30,0.62);
+  backdrop-filter:blur(14px);
+  color:#fff;
+  text-align:left;
+  cursor:pointer;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1),border-color .2s,box-shadow .2s,background .2s;
+  position:relative;
+  overflow:hidden;
+}
+.r-frame:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,205,120,0.65);
+  background:rgba(18,32,46,0.8);
+  box-shadow:0 12px 24px rgba(0,0,0,0.45),0 0 16px rgba(255,185,90,0.18);
+}
+.r-badge{
+  align-self:flex-start;
+  font-size:0.68rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  padding:3px 8px;
+  border-radius:6px;
+  background:rgba(255,185,90,0.14);
+  color:#ffca7a;
+  border:1px solid rgba(255,185,90,0.26);
+  margin-bottom:8px;
+}
+.r-title{
+  font-family:var(--fh);
+  font-size:1rem;
+  font-weight:700;
+  line-height:1.25;
+  letter-spacing:-0.02em;
+  color:#fff;
+  margin-bottom:6px;
+}
+.r-desc{
+  font-size:0.8rem;
+  line-height:1.38;
+  color:rgba(255,255,255,0.72);
+  margin-bottom:10px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.r-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:0.75rem;
+  font-weight:600;
+  color:#ffca7a;
+  opacity:0.85;
+  margin-top:auto;
+}
+.r-frame:hover .r-footer{
+  opacity:1;
+  color:#ffe0a8;
+}
+
+/* Empty frame placeholders */
+.r-frame.empty{
+  border:1px dashed rgba(255,255,255,0.22);
+  background:rgba(8,16,24,0.36);
+  cursor:pointer;
+}
+.r-frame.empty:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,220,160,0.45);
+  background:rgba(14,24,34,0.52);
+  box-shadow:0 8px 18px rgba(0,0,0,0.3);
+}
+.r-frame.empty .r-badge{
+  background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.65);
+  border-color:rgba(255,255,255,0.16);
+}
+.r-frame.empty .r-title{
+  color:rgba(255,255,255,0.7);
+}
+.r-frame.empty .r-desc{
+  color:rgba(255,255,255,0.42);
+}
+.r-frame.empty .r-footer{
+  color:rgba(255,255,255,0.45);
+}
+
+/* Pagination bar */
+.pagination-bar{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:32px auto 16px;
+  padding:12px 20px;
+  border-radius:99px;
+  background:rgba(8,16,24,0.68);
+  border:1px solid rgba(255,215,140,0.2);
+  backdrop-filter:blur(14px);
+  width:fit-content;
+}
+.page-btn{
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  border-radius:99px;
+  padding:7px 16px;
+  font-size:0.86rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .18s;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.page-btn:hover:not(:disabled){
+  background:rgba(255,190,100,0.24);
+  border-color:rgba(255,190,100,0.5);
+  color:#ffda94;
+  transform:translateY(-1px);
+}
+.page-btn:disabled{
+  opacity:0.32;
+  cursor:not-allowed;
+  transform:none;
+}
+.page-indicator{
+  padding:0 12px;
+  font-size:0.88rem;
+  color:rgba(255,255,255,0.85);
+  font-weight:500;
+}
+.page-indicator b{
+  color:#ffbe6a;
+}
+
+@media(max-width:1300px){
+  .rabbit-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:960px){
+  .rabbit-grid{grid-template-columns:repeat(3,1fr)}
+  #explore .cards{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .rabbit-grid{grid-template-columns:repeat(2,1fr)}
+  .grid-header{flex-direction:column;align-items:flex-start}
+  .pagination-bar{width:100%;justify-content:space-between;gap:6px;padding:10px 14px}
+  .page-btn{padding:6px 10px;font-size:0.78rem}
+}
 .card,.pic{transform-style:preserve-3d;will-change:transform;transition:transform .16s cubic-bezier(.2,.7,.3,1)}
 .card img,.pic img{will-change:transform;transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+/* Skill Studio with Focus statue backdrop */
+#skills{
+  position:absolute;
+  inset:0;
+  padding:88px clamp(16px,4vw,48px) 40px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:#020202;
+  color:#fff;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,0.2) transparent;
+}
+#skills::-webkit-scrollbar{width:8px}
+#skills::-webkit-scrollbar-track{background:transparent}
+#skills::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);border-radius:99px}
+#skills::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.35)}
+
+.skills-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.skills-bg-img{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  transform:scale(1.05);
+  filter:brightness(0.92) contrast(1.08);
+  will-change:transform;
+  transition:transform 0.25s cubic-bezier(.2,.8,.3,1);
+}
+.skills-backdrop:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 50%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.85) 100%),
+              linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 70%, rgba(0,0,0,0.85) 100%);
+}
+
+.skills-inner{
+  position:relative;
+  z-index:2;
+  max-width:740px;
+  margin:0 auto;
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.skills-console{
+  background:rgba(8, 8, 10, 0.68);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border:1px solid rgba(255, 255, 255, 0.16);
+  border-radius:26px;
+  padding:clamp(26px, 4vw, 42px);
+  box-shadow:0 24px 64px rgba(0,0,0,0.75), 0 0 40px rgba(255,255,255,0.03);
+  color:#fff;
+}
+.skills-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:4px 12px;
+  border-radius:99px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.18);
+  color:rgba(255,255,255,0.85);
+  font:600 .76rem var(--fb);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.skills-console h2{
+  font-size:clamp(28px, 3.5vw, 44px);
+  color:#fff;
+  letter-spacing:-.03em;
+  margin:0 0 8px;
+  text-shadow:0 2px 14px rgba(0,0,0,0.6);
+}
+.skills-console .lead{
+  color:rgba(255,255,255,0.72);
+  margin:0 0 20px;
+  font-size:0.96rem;
+}
+.skills-console .chips{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.skills-console .chip{
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.85);
+  padding:.45em 1.15em;
+  border-radius:99px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .18s;
+}
+.skills-console .chip:hover{
+  background:rgba(255,255,255,0.16);
+  color:#fff;
+}
+.skills-console .chip[aria-selected=true]{
+  background:#fff;
+  color:#09090b;
+  border-color:#fff;
+  box-shadow:0 4px 14px rgba(255,255,255,0.25);
+}
+.skills-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+}
+.skills-card h3{
+  color:#fff;
+  font-size:1.45rem;
+  margin:0 0 6px;
+  letter-spacing:-.02em;
+}
+.skills-summary{
+  color:rgba(255,255,255,0.75);
+  margin:0 0 14px;
+  font-size:0.92rem;
+}
+.skills-console .prompt{
+  margin:0;
+  padding:14px 16px;
+  background:rgba(255,255,255,0.06);
+  border-left:4px solid #fff;
+  border-radius:4px 12px 12px 4px;
+  color:#fff;
+  font-weight:600;
+  font-size:0.96rem;
+}
+.skills-console .bar{
+  height:8px;
+  border-radius:99px;
+  background:rgba(255,255,255,0.12);
+  overflow:hidden;
+  margin:16px 0 6px;
+}
+.skills-console .bar i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg, #d4d4d8, #ffffff);
+  box-shadow:0 0 10px rgba(255,255,255,0.5);
+  transition:width .45s ease;
+}
+.skills-console .meta{
+  display:flex;
+  justify-content:space-between;
+  color:rgba(255,255,255,0.65);
+  font-size:.86rem;
+  margin-bottom:18px;
+}
+.skills-console .btn{
+  background:#fff;
+  color:#09090b;
+  font-weight:700;
+  padding:.75em 1.6em;
+  border-radius:99px;
+  box-shadow:0 6px 18px rgba(255,255,255,0.18);
+  transition:all .18s;
+}
+.skills-console .btn:hover{
+  background:#f4f4f5;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(255,255,255,0.28);
+}
+
 /* communities, skills, ideas */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{border:1px solid var(--line);background:#fff8;border-radius:99px;padding:.4em 1em;cursor:pointer;font-weight:600;font-size:.88rem}
@@ -117,18 +706,31 @@ nav button:hover{color:var(--ink)}nav button[aria-current=true]{background:var(-
 [data-mode=dark] #buddy{background:#0d2224!important}
 [data-mode=dark] #home .shade{background:linear-gradient(90deg,#04191de6 0,#062a2fcc 45%,#04191d22 82%)}
 [data-mode=dark] ::placeholder{color:var(--mute)}
-/* exit into sign in / sign up: the hero greys out and the copy clears, then
-   auth.html picks up the same photo and slides it into its column */
-#home{transition:background-color .45s ease}
-#home .shot{transition:filter .35s ease}
+/* exit into sign in / sign up: the hero smoothly desaturates into black and white,
+   the copy clears, then auth.html picks up the same photo and slides it into its column */
+#home{transition:background-color .6s ease}
 body.leaving{pointer-events:none}
-body.leaving .win{transition:opacity .28s ease}
+body.leaving .win{transition:opacity .35s ease}
 body.leaving #home{background:#fafafa}
 [data-mode=dark] body.leaving #home{background:#0f1012}
-body.leaving #home .shot{filter:grayscale(1) contrast(1.06)}
-[data-mode=dark] body.leaving #home .shot{filter:grayscale(1) contrast(1.06) brightness(.8)}
-body.leaving .win .inner{opacity:0;transform:translateY(-12px);transition:opacity .28s ease,transform .34s ease}
-body.leaving .top{opacity:0;transform:translateY(-14px);transition:opacity .28s ease,transform .34s ease}
+body.leaving #home .shot{
+  filter:grayscale(1) contrast(1.06);
+  transition:filter .65s cubic-bezier(.22,1,.36,1)!important;
+}
+[data-mode=dark] body.leaving #home .shot{
+  filter:grayscale(1) contrast(1.06) brightness(.8);
+  transition:filter .65s cubic-bezier(.22,1,.36,1)!important;
+}
+body.leaving #home .shade,
+body.leaving #home .stage:after,
+body.leaving #home .dust{
+  opacity:0;
+  transition:opacity .55s ease;
+}
+body.leaving .win .inner{opacity:0;transform:translateY(-12px);transition:opacity .32s ease,transform .38s ease}
+body.leaving .top{opacity:0;transform:translateY(-14px);transition:opacity .32s ease,transform .38s ease}
+body.leaving .tale-ui,
+body.leaving .hint{opacity:0;transition:opacity .28s ease}
 /* window entrance animations */
 @keyframes lmCloseIn{from{opacity:0;filter:blur(8px);transform:translateX(var(--dx,0)) scale(1.12)}to{opacity:1;filter:blur(0);transform:none}}
 @keyframes lmRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -167,14 +769,14 @@ body.leaving .top{opacity:0;transform:translateY(-14px);transition:opacity .28s 
 <section class="win" id="home" aria-label="Home">
   <div class="tale">
     <div class="stage">
-      <img class="shot" src="assets/hero-wide.webp" alt="">
+      <img class="shot active" src="assets/hero-wide.webp" alt="">
       <img class="shot" src="assets/astronaut-generated.webp" alt="">
       <img class="shot" src="assets/collective-thinking.webp" alt="">
       <div class="blend" aria-hidden="true"></div>
       <div class="shade" aria-hidden="true"></div>
       <div class="dust" aria-hidden="true"></div>
 
-      <div class="copy" data-copy="0"><div class="inner">
+      <div class="copy active" data-copy="0"><div class="inner">
         <p class="eyebrow">A study buddy for curious minds</p>
         <h1>Make learning feel like magic.</h1>
         <p class="lead">Meet the study buddy that makes big ideas click. Ask anything, follow the why, and find your own way through.</p>
@@ -201,15 +803,224 @@ body.leaving .top{opacity:0;transform:translateY(-14px);transition:opacity .28s 
   </div>
 </section>
 
-<section class="win" id="explore" aria-label="Explore"><div class="inner">
-  <h2>Pick a rabbit hole.</h2><p class="lead">Science, patterns, people. Choose one and your buddy will start the conversation.</p>
-  <div class="cards">
-    <button class="card" data-ask="Why is the sky blue?"><img src="assets/astronaut-generated.webp" alt=""><span>Wonder about science<small>Why is the sky blue?</small></span></button>
-    <button class="card" data-ask="Why do patterns show up everywhere in nature?"><img src="assets/mind-garden.webp" alt=""><span>Find the patterns<small>Why do patterns show up in nature?</small></span></button>
-    <button class="card" data-ask="How do groups think better than one person?"><img src="assets/collective-thinking.webp" alt=""><span>Think with others<small>How do groups think better?</small></span></button>
-  </div></div>
-</section>
+<section class="win" id="explore" aria-label="Explore">
+  <div class="explore-backdrop" aria-hidden="true">
+    <img src="assets/explore-backdrop.jpg" alt="" class="explore-bg-img" id="exploreBgImg">
+  </div>
+  <div class="inner">
+    <h2>Pick a rabbit hole.</h2>
+    <p class="lead">Science, patterns, people. Choose one and your buddy will start the conversation.</p>
+    
+    <div class="cards">
+      <button class="card" data-ask="Why is the sky blue?"><img src="assets/astronaut-generated.webp" alt=""><span>Wonder about science<small>Why is the sky blue?</small></span></button>
+      <button class="card" data-ask="Why do patterns show up everywhere in nature?"><img src="assets/mind-garden.webp" alt=""><span>Find the patterns<small>Why do patterns show up in nature?</small></span></button>
+      <button class="card" data-ask="How do groups think better than one person?"><img src="assets/collective-thinking.webp" alt=""><span>Think with others<small>How do groups think better?</small></span></button>
+    </div>
 
+    <!-- Rabbit Hole Grid: 5 rows of 6 columns (30 cards) -->
+    <div class="grid-section">
+      <div class="grid-header">
+        <div>
+          <h3 class="grid-title">Dive Deeper into the Rabbit Holes</h3>
+          <p class="grid-sub">5 rows × 6 columns of mind-expanding inquiries. Click any portal to investigate with Buddy.</p>
+        </div>
+        <div class="grid-badge" id="gridPageBadge">Page 1 of 2 · 30 Active Inquiries</div>
+      </div>
+
+      <div class="rabbit-grid" id="rabbitGrid">
+        <button class="r-frame" data-ask="What really happens to information that falls into a black hole?">
+          <div class="r-badge">Cosmos</div>
+          <div class="r-title">Event Horizons</div>
+          <div class="r-desc">What really happens to information that falls into a black hole?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Can two particles communicate instantaneously across galaxies?">
+          <div class="r-badge">Quantum</div>
+          <div class="r-title">Entanglement</div>
+          <div class="r-desc">Can two particles communicate instantaneously across galaxies?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why does physical neural firing give rise to subjective feeling?">
+          <div class="r-badge">Mind</div>
+          <div class="r-title">Consciousness</div>
+          <div class="r-desc">Why does physical neural firing give rise to subjective feeling?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="If intelligent alien life is probable, why is the universe silent?">
+          <div class="r-badge">Cosmology</div>
+          <div class="r-title">Fermi Paradox</div>
+          <div class="r-desc">If intelligent alien life is probable, why is the universe silent?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Can a mathematical system ever prove every truth within itself?">
+          <div class="r-badge">Math</div>
+          <div class="r-title">Incompleteness</div>
+          <div class="r-desc">Can a mathematical system ever prove every truth within itself?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why does entropy dictate time only marches forward, never backward?">
+          <div class="r-badge">Physics</div>
+          <div class="r-title">Arrow of Time</div>
+          <div class="r-desc">Why does entropy dictate time only marches forward, never backward?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How do chemical reactions create zebra stripes and leopard spots?">
+          <div class="r-badge">Biology</div>
+          <div class="r-title">Turing Patterns</div>
+          <div class="r-desc">How do chemical reactions create zebra stripes and leopard spots?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="If every single part of you is replaced, are you still the same entity?">
+          <div class="r-badge">Philosophy</div>
+          <div class="r-title">Ship of Theseus</div>
+          <div class="r-desc">If every single part of you is replaced, are you still the same entity?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Can an algorithm exist that predicts whether all programs will terminate?">
+          <div class="r-badge">Computing</div>
+          <div class="r-title">Halting Problem</div>
+          <div class="r-desc">Can an algorithm exist that predicts whether all programs will terminate?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Does the vocabulary of your language limit the concepts you can perceive?">
+          <div class="r-badge">Language</div>
+          <div class="r-title">Linguistic Relativity</div>
+          <div class="r-desc">Does the vocabulary of your language limit the concepts you can perceive?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How do subterranean fungal networks share resources between trees?">
+          <div class="r-badge">Forests</div>
+          <div class="r-title">Wood Wide Web</div>
+          <div class="r-desc">How do subterranean fungal networks share resources between trees?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="What is the invisible 95% of the cosmos that shapes entire galaxies?">
+          <div class="r-badge">Universe</div>
+          <div class="r-title">Dark Matter</div>
+          <div class="r-desc">What is the invisible 95% of the cosmos that shapes entire galaxies?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why do musical intervals trigger universal emotional resonance?">
+          <div class="r-badge">Acoustics</div>
+          <div class="r-title">Harmonic Series</div>
+          <div class="r-desc">Why do musical intervals trigger universal emotional resonance?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why do organisms grow disproportionately massive in total darkness?">
+          <div class="r-badge">Abyss</div>
+          <div class="r-title">Deep Sea Giants</div>
+          <div class="r-desc">Why do organisms grow disproportionately massive in total darkness?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Does your visual cortex hallucinate your perception of the world?">
+          <div class="r-badge">Perception</div>
+          <div class="r-title">Constructed Reality</div>
+          <div class="r-desc">Does your visual cortex hallucinate your perception of the world?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How was a complex mechanical astronomical clock built 2,000 years ago?">
+          <div class="r-badge">Antiquity</div>
+          <div class="r-title">Antikythera</div>
+          <div class="r-desc">How was a complex mechanical astronomical clock built 2,000 years ago?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why has natural selection repeatedly evolved animals into crabs?">
+          <div class="r-badge">Evolution</div>
+          <div class="r-title">Carcinisation</div>
+          <div class="r-desc">Why has natural selection repeatedly evolved animals into crabs?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why does rational individual self-interest create collective ruin?">
+          <div class="r-badge">Strategy</div>
+          <div class="r-title">Game Theory</div>
+          <div class="r-desc">Why does rational individual self-interest create collective ruin?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Is the phi spiral a universal cosmic blueprint or human pattern-matching?">
+          <div class="r-badge">Geometry</div>
+          <div class="r-title">Golden Ratio</div>
+          <div class="r-desc">Is the phi spiral a universal cosmic blueprint or human pattern-matching?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why can the human neocortex only genuinely sustain ~150 social bonds?">
+          <div class="r-badge">Social</div>
+          <div class="r-title">Dunbar's Number</div>
+          <div class="r-desc">Why can the human neocortex only genuinely sustain ~150 social bonds?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Can ancestral trauma or nutrition alter gene expression across generations?">
+          <div class="r-badge">Genetics</div>
+          <div class="r-title">Epigenetics</div>
+          <div class="r-desc">Can ancestral trauma or nutrition alter gene expression across generations?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="What are the statistical odds that we live inside an ancestor simulation?">
+          <div class="r-badge">Reality</div>
+          <div class="r-title">Simulation Matrix</div>
+          <div class="r-desc">What are the statistical odds that we live inside an ancestor simulation?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Can deterministic non-linear systems ever be reliably predicted?">
+          <div class="r-badge">Chaos</div>
+          <div class="r-title">Butterfly Effect</div>
+          <div class="r-desc">Can deterministic non-linear systems ever be reliably predicted?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="Why does an android become unsettling right before it looks human?">
+          <div class="r-badge">Robotics</div>
+          <div class="r-title">Uncanny Valley</div>
+          <div class="r-desc">Why does an android become unsettling right before it looks human?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How do acoustic shockwaves in liquid collapse bubbles into star-hot plasma?">
+          <div class="r-badge">Energy</div>
+          <div class="r-title">Sonoluminescence</div>
+          <div class="r-desc">How do acoustic shockwaves in liquid collapse bubbles into star-hot plasma?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How did a runaway global freeze trigger the explosion of complex life?">
+          <div class="r-badge">Planetary</div>
+          <div class="r-title">Snowball Earth</div>
+          <div class="r-desc">How did a runaway global freeze trigger the explosion of complex life?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="What secrets are locked inside Linear A and the Indus Valley script?">
+          <div class="r-badge">Paleography</div>
+          <div class="r-title">Lost Scripts</div>
+          <div class="r-desc">What secrets are locked inside Linear A and the Indus Valley script?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How do self-regulating loops govern cells, ecologies, and climates?">
+          <div class="r-badge">Systems</div>
+          <div class="r-title">Feedback Loops</div>
+          <div class="r-desc">How do self-regulating loops govern cells, ecologies, and climates?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="How does a brainless single-celled organism calculate optimal rail routes?">
+          <div class="r-badge">Intelligence</div>
+          <div class="r-title">Slime Mold Logic</div>
+          <div class="r-desc">How does a brainless single-celled organism calculate optimal rail routes?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+        <button class="r-frame" data-ask="What unseen supercluster is hauling our entire quadrant of space toward it?">
+          <div class="r-badge">Deep Space</div>
+          <div class="r-title">Great Attractor</div>
+          <div class="r-desc">What unseen supercluster is hauling our entire quadrant of space toward it?</div>
+          <div class="r-footer"><span>Explore rabbit hole</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </button>
+      </div>
+
+      <!-- Pagination bar -->
+      <div class="pagination-bar" role="navigation" aria-label="Rabbit holes pagination">
+        <button class="page-btn" id="btnFirst" title="First page" disabled>« First</button>
+        <button class="page-btn" id="btnPrev" title="Previous page" disabled>‹ Previous</button>
+        <div class="page-indicator" id="pageIndicator">Page <b>1</b> of <b>2</b></div>
+        <button class="page-btn" id="btnNext" title="Next page">Next ›</button>
+        <button class="page-btn" id="btnLast" title="Last page">Last »</button>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="win" id="communities" aria-label="Communities" style="background:#e1f0ea"><div class="inner two">
   <div class="pic"><img src="assets/collective-thinking.webp" alt="Layered figures inside an eye"></div>
   <div><h2>Many minds, more possibility.</h2><p class="lead">Small circles around one big question.</p>
@@ -220,13 +1031,32 @@ body.leaving .top{opacity:0;transform:translateY(-14px);transition:opacity .28s 
   </div></div>
 </section>
 
-<section class="win" id="skills" aria-label="Skill studio"><div class="inner two">
-  <div class="pic"><img src="assets/mind-garden.webp" alt="A mind with ideas growing through it"></div>
-  <div><h2>Build a mind that keeps opening.</h2>
-    <div class="chips" role="tablist" aria-label="Skill" id="tabs"></div>
-    <h3 id="xt" style="font-size:1.6rem"></h3><p class="lead" id="xd" style="margin:8px 0 0"></p><div class="prompt" id="xp"></div>
-    <div class="bar"><i id="pb" style="width:18%"></i></div><div class="meta"><span id="pp">18%</span><span id="rc">0 reps today</span></div>
-    <button class="btn" id="rep">Mark one rep done</button></div></div>
+<section class="win" id="skills" aria-label="Skill studio">
+  <div class="skills-backdrop" aria-hidden="true">
+    <img src="assets/skills-backdrop.jpg" alt="David statue with FOCUS typography" class="skills-bg-img" id="skillsBgImg">
+  </div>
+  <div class="inner skills-inner">
+    <div class="skills-console">
+      <div class="skills-badge">Skill studio · Deliberate practice</div>
+      <h2>Build a mind that keeps opening.</h2>
+      <p class="lead">Select a mental discipline to sharpen. Stay with one good question and mark your reps.</p>
+
+      <div class="chips" role="tablist" aria-label="Skill" id="tabs"></div>
+      
+      <div class="skills-card">
+        <h3 id="xt"></h3>
+        <p class="skills-summary" id="xd"></p>
+        <div class="prompt" id="xp"></div>
+      </div>
+
+      <div class="skills-progress">
+        <div class="bar"><i id="pb" style="width:18%"></i></div>
+        <div class="meta"><span id="pp">18%</span><span id="rc">0 reps today</span></div>
+      </div>
+
+      <button class="btn" id="rep">Mark one rep done</button>
+    </div>
+  </div>
 </section>
 
 <section class="win" id="ideas" aria-label="Idea lab" style="background:#fde4db"><div class="inner two">
@@ -282,7 +1112,102 @@ function show(n,push){if(!NAMES.includes(n))n='home';$$('.win').forEach(w=>w.cla
 splitHero();
 $$('[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.go)}));
 window.addEventListener('hashchange',()=>show(location.hash.slice(1),false));show(location.hash.slice(1)||'home',false);
-$$('[data-ask]').forEach(c=>c.onclick=()=>{show('buddy');$('#q').value=c.dataset.ask;$('#q').focus()});
+// Unified handler for all rabbit hole cards (initial + paginated)
+document.addEventListener('click', e => {
+  const card = e.target.closest('[data-ask]');
+  if (!card) return;
+  const ask = card.dataset.ask;
+  if (!ask) return;
+  e.preventDefault();
+  show('buddy');
+  const q = $('#q');
+  if (q) {
+    q.value = ask;
+    q.focus();
+  }
+});
+
+// Explore backdrop smooth parallax scroll
+(() => {
+  const explore = $('#explore');
+  const bg = $('#exploreBgImg');
+  if (!explore || !bg) return;
+  explore.addEventListener('scroll', () => {
+    const max = Math.max(1, explore.scrollHeight - explore.clientHeight);
+    const ratio = Math.min(1, Math.max(0, explore.scrollTop / max));
+    bg.style.transform = `scale(1.08) translateY(${(ratio * -95).toFixed(1)}px)`;
+  }, { passive: true });
+})();
+
+// Explore rabbit holes pagination (Page 1: 30 active ideas, Page 2: 30 ready frames)
+(() => {
+  const grid = document.getElementById('rabbitGrid');
+  const btnFirst = document.getElementById('btnFirst');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const btnLast = document.getElementById('btnLast');
+  const pageIndicator = document.getElementById('pageIndicator');
+  const pageBadge = document.getElementById('gridPageBadge');
+  if (!grid || !btnFirst) return;
+
+  const rawPage1 = grid.innerHTML;
+
+  // Generate 30 empty placeholder frames for page 2
+  let p2HTML = '';
+  for (let i = 31; i <= 60; i++) {
+    p2HTML += `        <button class="r-frame empty" data-ask="Explore portal #${i}: What is an intriguing inquiry waiting to be discovered here?">
+          <div class="r-badge">Frame #${i}</div>
+          <div class="r-title">Reserved Portal</div>
+          <div class="r-desc">Awaiting next rabbit hole topic. Frame initialized and ready to connect with your Buddy.</div>
+          <div class="r-footer"><span>Tap to explore frame</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg></div>
+        </button>\n`;
+  }
+
+  const totalPages = 2;
+  let currentPage = 1;
+
+  function renderPage(page) {
+    currentPage = page;
+    grid.style.opacity = '0';
+    setTimeout(() => {
+      if (page === 1) {
+        grid.innerHTML = rawPage1;
+        if (pageBadge) pageBadge.textContent = 'Page 1 of 2 · 30 Active Inquiries';
+      } else {
+        grid.innerHTML = p2HTML;
+        if (pageBadge) pageBadge.textContent = 'Page 2 of 2 · 30 Ready Portal Frames';
+      }
+      grid.style.opacity = '1';
+    }, 150);
+
+    btnFirst.disabled = (currentPage === 1);
+    btnPrev.disabled = (currentPage === 1);
+    btnNext.disabled = (currentPage === totalPages);
+    btnLast.disabled = (currentPage === totalPages);
+    if (pageIndicator) pageIndicator.innerHTML = `Page <b>${currentPage}</b> of <b>${totalPages}</b>`;
+  }
+
+  btnFirst.addEventListener('click', () => renderPage(1));
+  btnPrev.addEventListener('click', () => { if (currentPage > 1) renderPage(currentPage - 1); });
+  btnNext.addEventListener('click', () => { if (currentPage < totalPages) renderPage(currentPage + 1); });
+  btnLast.addEventListener('click', () => renderPage(totalPages));
+})();
+// Skills backdrop sway
+(() => {
+  const skills = $('#skills');
+  const bg = $('#skillsBgImg');
+  if (!skills || !bg) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  window.addEventListener('pointermove', e => {
+    if (document.body.dataset.win !== 'skills') return;
+    if (e.pointerType === 'touch') return;
+    const x = (e.clientX / innerWidth - 0.5) * 20;
+    const y = (e.clientY / innerHeight - 0.5) * 14;
+    bg.style.transform = `scale(1.05) translate3d(${(x * -0.5).toFixed(1)}px, ${(y * -0.5).toFixed(1)}px, 0)`;
+  }, { passive: true });
+})();
+
 /* Cursor sway: each photo tilts and drifts toward the pointer, its image counter-moves for depth. */
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
   $$('.card,.pic').forEach(el=>{
@@ -320,66 +1245,202 @@ const spark=()=>{idea=P[mode]($('#seed').value.trim()||'a curious question');$('
 $('#pin').onclick=()=>{const s=document.createElement('span');s.textContent=idea;$('#wall').prepend(s);$('#pin').disabled=true};
 $('#sendf').onsubmit=e=>{e.preventDefault();const q=$('#q').value.trim();if(!q)return;const add=(c,t)=>{const d=document.createElement('div');d.className='m '+c;d.textContent=t;$('#chat').append(d);$('#chat').scrollTop=1e9};add('u',q);$('#q').value='';setTimeout(()=>add('b',`Good one. A full answer to “${q}” would give a clear explanation, an example and a next question. This is a preview, so real answers come later.`),400)};
 try{if(JSON.parse(localStorage.getItem('lm_session')||'null')){$('#si').remove();$('#su').textContent='Open LearnMate';$('#su').href='app.html'}}catch(e){}
-/* Home story: the scroll moves a camera through three scenes, the pointer adds
-   depth. The camera state is handed to auth.html so the photo carries over. */
+/* Home story: one-scroll snap transition through scenes with cinematic reveal and pointer depth */
 (() => {
   const home=$('#home');
   if(!home) return;
-  const tale=home.querySelector('.tale'),shots=[...home.querySelectorAll('.shot')];
+  const shots=[...home.querySelectorAll('.shot')];
   const copies=[...home.querySelectorAll('.copy')];
-  const count=home.querySelector('.count b'),bar=home.querySelector('.tline i'),hint=home.querySelector('.hint'),blend=home.querySelector('.blend');
-  if(!tale||shots.length<2) return;
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  home.classList.add('story');
-  const N=shots.length,clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-  const cam={src:shots[0].getAttribute('src'),zoom:1.04,dx:0,dy:0};
+  const count=home.querySelector('.count b'),bar=home.querySelector('.tline i'),hint=home.querySelector('.hint'),taleUi=home.querySelector('.tale-ui');
+  const N=shots.length;
+  if(N<2) return;
+
+  let current=0,isLocked=false,lockTimer=null,cleanPastTimer=null;
+  const cam={src:shots[0].getAttribute('src'),zoom:1.025,dx:0,dy:0};
   window.__cam=cam;
-  let px=0,py=0,tx=0,ty=0,active=-1;
-  function frame(now){
-    const max=Math.max(1,tale.offsetHeight-innerHeight);
-    const p=clamp(home.scrollTop/max,0,1),t=p*(N-1);
-    let best=0,bestO=-1;
+  let px=0,py=0,tx=0,ty=0;
+
+  function setScene(idx){
+    if(idx===current && shots[idx].classList.contains('active')) return;
+    const prevIdx=current;
+    current=idx;
+    
+    // Clear any previous cleanup
+    clearTimeout(cleanPastTimer);
+
+    // Update shots: current becomes active (z-index 2), prev becomes past (z-index 1)
     shots.forEach((s,i)=>{
-      const o=clamp(1-Math.abs(t-i),0,1);
-      const local=clamp(t-i,0,1);
-      const zoom=1.04+local*.17+Math.sin(now/9000+i)*.005;
-      const dx=(local-.5)*22+px*13,dy=(local-.5)*9+py*9;
-      s.style.opacity=o.toFixed(3);
-      s.style.transform=`translate3d(${dx.toFixed(2)}px,${dy.toFixed(2)}px,0) scale(${zoom.toFixed(4)})`;
-      s.style.visibility=o>.01?'visible':'hidden';
-      if(o>bestO){bestO=o;best=i;cam.src=s.getAttribute('src');cam.zoom=zoom;cam.dx=dx;cam.dy=dy}
+      if(i===current){
+        s.classList.remove('past');
+        s.classList.add('active');
+        s.setAttribute('aria-hidden','false');
+      }else if(i===prevIdx){
+        s.classList.remove('active');
+        s.classList.add('past');
+        s.setAttribute('aria-hidden','true');
+      }else{
+        s.classList.remove('active','past');
+        s.setAttribute('aria-hidden','true');
+      }
     });
+
+    // Update copies: current becomes active with staggered cascade, prev glides upward
     copies.forEach((c,i)=>{
-      const o=clamp((.5-Math.abs(t-i))/.22,0,1);
-      c.style.opacity=o.toFixed(3);
-      c.style.transform=`translate3d(${(px*-11).toFixed(2)}px,${((i<t?-1:1)*(1-o)*22- py*9).toFixed(2)}px,0)`;
-      c.inert=o<.55;
+      if(i===current){
+        c.classList.remove('past');
+        c.classList.add('active');
+        c.inert=false;
+      }else if(i===prevIdx){
+        c.classList.remove('active');
+        c.classList.add('past');
+        c.inert=true;
+      }else{
+        c.classList.remove('active','past');
+        c.inert=true;
+      }
     });
-    if(best!==active){active=best;if(count)count.textContent=String(best+1).padStart(2,'0')}
-    if(bar)bar.style.transform=`scaleX(${p.toFixed(4)})`;
-    if(blend)blend.style.opacity=(clamp(1-Math.abs(t-Math.floor(t)-.5)*2,0,1)*.42).toFixed(3);
-    if(hint)hint.style.opacity=String(clamp(1-p*10,0,1));
+
+    // Clean up .past class after transition completes (1150ms)
+    cleanPastTimer=setTimeout(()=>{
+      shots.forEach((s,i)=>{if(i!==current)s.classList.remove('past')});
+      copies.forEach((c,i)=>{if(i!==current)c.classList.remove('past')});
+    },1150);
+
+    if(count)count.textContent=String(current+1).padStart(2,'0');
+    if(bar)bar.style.transform=`scaleX(${current/(N-1)})`;
+    if(hint){
+      hint.textContent=current===N-1?'Back to top ↑':'Scroll to explore';
+      hint.style.opacity=current===0?'1':'0.75';
+    }
+    cam.src=shots[current].getAttribute('src');
   }
-  const loop=now=>{
-    px+=(tx-px)*.08;py+=(ty-py)*.08;
-    if(document.body.dataset.win==='home'&&!document.body.classList.contains('leaving'))frame(now);
-    requestAnimationFrame(loop);
-  };
-  requestAnimationFrame(loop);
-  window.addEventListener('pointermove',e=>{
-    if(e.pointerType==='touch')return;
-    tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2;
+
+  function goTo(idx){
+    if(idx<0||idx>=N||idx===current||isLocked) return;
+    isLocked=true;
+    setScene(idx);
+    clearTimeout(lockTimer);
+    lockTimer=setTimeout(()=>{
+      isLocked=false;
+      wheelDeltaSum=0;
+    },950);
+  }
+
+  // Initial setup without transition jump
+  shots.forEach((s,i)=>{
+    s.classList.toggle('active',i===0);
+    s.setAttribute('aria-hidden',String(i!==0));
+  });
+  copies.forEach((c,i)=>{
+    c.classList.toggle('active',i===0);
+    c.inert=i!==0;
+  });
+  if(count)count.textContent='01';
+  if(bar)bar.style.transform='scaleX(0)';
+  if(hint){
+    hint.textContent='Scroll to explore';
+    hint.style.opacity='1';
+  }
+
+  // Wheel snap on #home with momentum damping
+  let wheelDeltaSum=0,wheelResetTimer=null,lastWheelTime=0;
+  home.addEventListener('wheel',e=>{
+    if(document.body.dataset.win!=='home') return;
+    e.preventDefault();
+    if(isLocked) return;
+
+    const now=performance.now();
+    if(now-lastWheelTime>260){
+      wheelDeltaSum=0;
+    }
+    lastWheelTime=now;
+    wheelDeltaSum+=e.deltaY;
+
+    const threshold=36;
+    if(Math.abs(wheelDeltaSum)>=threshold){
+      if(wheelDeltaSum>0){
+        if(current<N-1) goTo(current+1);
+      }else{
+        if(current>0) goTo(current-1);
+      }
+      wheelDeltaSum=0;
+    }
+    clearTimeout(wheelResetTimer);
+    wheelResetTimer=setTimeout(()=>{wheelDeltaSum=0;},180);
+  },{passive:false});
+
+  // Touch swipe snap
+  let touchStartY=0,touchStartX=0;
+  home.addEventListener('touchstart',e=>{
+    if(document.body.dataset.win!=='home') return;
+    touchStartY=e.touches[0].clientY;
+    touchStartX=e.touches[0].clientX;
   },{passive:true});
-  home.addEventListener('scroll',()=>frame(performance.now()),{passive:true});
-  addEventListener('resize',()=>frame(performance.now()));
+
+  home.addEventListener('touchend',e=>{
+    if(document.body.dataset.win!=='home'||isLocked) return;
+    const dy=touchStartY-e.changedTouches[0].clientY;
+    const dx=touchStartX-e.changedTouches[0].clientX;
+    if(Math.abs(dy)>40&&Math.abs(dy)>Math.abs(dx)*1.3){
+      if(dy>0){
+        if(current<N-1) goTo(current+1);
+      }else{
+        if(current>0) goTo(current-1);
+      }
+    }
+  },{passive:true});
+
+  // Keyboard navigation
+  window.addEventListener('keydown',e=>{
+    if(document.body.dataset.win!=='home'||isLocked) return;
+    if(['ArrowDown','PageDown',' '].includes(e.key)){
+      if(current<N-1){e.preventDefault();goTo(current+1)}
+    }else if(['ArrowUp','PageUp'].includes(e.key)){
+      if(current>0){e.preventDefault();goTo(current-1)}
+    }
+  });
+
+  // Clickable UI helpers
+  if(hint)hint.addEventListener('click',()=>goTo(current===N-1?0:current+1));
+  if(taleUi)taleUi.addEventListener('click',()=>goTo((current+1)%N));
+
+  // Ambient dust particles
   const dust=home.querySelector('.dust');
-  if(dust)for(let i=0;i<16;i++){
+  if(dust)for(let i=0;i<18;i++){
     const el=document.createElement('i');
     const s=2+Math.random()*5;
-    el.style.cssText=`--x:${(Math.random()*100).toFixed(2)}%;--y:${(30+Math.random()*80).toFixed(2)}%;--s:${s.toFixed(1)}px;--o:${(.12+Math.random()*.22).toFixed(2)};--d:${(14+Math.random()*16).toFixed(1)}s;--delay:${(-Math.random()*30).toFixed(1)}s;--r:${(Math.random()*90-45).toFixed(0)}deg;--r2:${(Math.random()*140-70).toFixed(0)}deg;--dx:${(Math.random()*120-60).toFixed(0)}px`;
+    el.style.cssText=`--x:${(Math.random()*100).toFixed(2)}%;--y:${(25+Math.random()*80).toFixed(2)}%;--s:${s.toFixed(1)}px;--o:${(.14+Math.random()*.24).toFixed(2)};--d:${(16+Math.random()*18).toFixed(1)}s;--delay:${(-Math.random()*30).toFixed(1)}s;--r:${(Math.random()*90-45).toFixed(0)}deg;--r2:${(Math.random()*140-70).toFixed(0)}deg;--dx:${(Math.random()*120-60).toFixed(0)}px`;
     dust.append(el);
   }
-  frame(performance.now());
+
+  // Pointer depth & smooth sway via CSS custom properties (avoids inline style clashing)
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    window.addEventListener('pointermove',e=>{
+      if(e.pointerType==='touch') return;
+      tx=(e.clientX/innerWidth-.5)*2;
+      ty=(e.clientY/innerHeight-.5)*2;
+    },{passive:true});
+
+    function swayLoop(){
+      px+=(tx-px)*.05;
+      py+=(ty-py)*.05;
+      if(document.body.dataset.win==='home'&&!document.body.classList.contains('leaving')){
+        const sx=px*14;
+        const sy=py*9;
+        const cx=px*-10;
+        const cy=py*-6;
+        home.style.setProperty('--px',`${sx.toFixed(2)}px`);
+        home.style.setProperty('--py',`${sy.toFixed(2)}px`);
+        home.style.setProperty('--cx',`${cx.toFixed(2)}px`);
+        home.style.setProperty('--cy',`${cy.toFixed(2)}px`);
+        cam.zoom=1.025;
+        cam.dx=sx;
+        cam.dy=sy;
+      }
+      requestAnimationFrame(swayLoop);
+    }
+    requestAnimationFrame(swayLoop);
+  }
 })();
 /* Sign in / sign up: the hero greys and the copy clears, then the sign-in page
    takes the same photo and slides it into its column while the panel arrives. */
@@ -389,7 +1450,7 @@ $$('a[href^="auth.html"]').forEach(a=>a.addEventListener('click',e=>{
   e.preventDefault();
   try{sessionStorage.setItem('lm_hero',JSON.stringify(document.body.dataset.win==='home'?window.__cam||null:null))}catch(err){}
   document.body.classList.add('leaving');
-  setTimeout(()=>location.href=a.getAttribute('href'),420);
+  setTimeout(()=>location.href=a.getAttribute('href'),580);
 }));
 window.addEventListener('pageshow',e=>{if(e.persisted)document.body.classList.remove('leaving')});
 </script>
