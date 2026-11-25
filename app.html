@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" data-theme="adult">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b6f7a">
 <title>LearnMate</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,7 +70,48 @@ details{position:relative}summary{list-style:none;cursor:pointer;display:flex;al
 .grid{grid-template-columns:minmax(0,720px);justify-content:center}.col{display:contents}.win-on{animation:in .25s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}}
 nav a[aria-current=true]{background:var(--acc);color:var(--on)}[data-theme=teen] nav a[aria-current=true]{background:#fff;color:var(--acc)}[data-theme=kids] nav a[aria-current=true]{background:var(--acc2);color:#fff}
 .brand-mark{width:34px;height:34px;object-fit:contain;display:block}
-@media(max-width:900px){.tiles{grid-template-columns:1fr}[data-theme=kids] .tile{min-height:0;flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px 14px}[data-theme=kids] .tile svg{width:40px;height:40px;margin:0}nav{display:flex!important;gap:0}nav a{padding:.4em .6em;font-size:.8em}.brand{font-size:1.1em}.grid,.hero,[data-theme=adult] .hero{grid-template-columns:1fr}nav{display:none}.hero h1{max-width:none}[data-theme=kids] .pic{border-left:0;border-top:3px solid var(--ink)}}
+html,body{overflow-x:hidden}
+.card,.hero,.grid,.preview{max-width:100%}
+@media(max-width:900px){
+  .wrap{width:min(1180px,calc(100% - 28px))}
+  header{padding:8px 0}
+  header .wrap{flex-wrap:wrap;gap:10px;padding:10px 12px}
+  [data-theme=adult] header .wrap{padding:10px 0}
+  .brand{font-size:1.12rem;gap:8px}
+  .brand-mark{width:28px;height:28px}
+  .right{margin-left:auto;gap:8px}
+  .menu{width:min(250px,calc(100vw - 28px))}
+  nav{order:3;width:100%;display:flex;justify-content:space-between;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-top:4px;border-top:1px solid color-mix(in srgb,var(--ink) 10%,transparent)}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:1 0 auto;text-align:center;padding:.45em .65em;font-size:.86rem;white-space:nowrap}
+  .preview{padding:10px 12px;gap:10px}.preview .seg{flex:1 1 100%}
+  .grid,.hero,[data-theme=adult] .hero{grid-template-columns:1fr;gap:16px}
+  .hero{min-height:0;margin-bottom:16px}
+  .hero .txt{padding:20px 18px;gap:12px}
+  [data-theme=adult] .hero .txt{padding:4px 0}
+  .hero h1{font-size:clamp(28px,8vw,42px);max-width:none}
+  [data-theme=adult] .hero h1{font-size:clamp(30px,8.5vw,44px);max-width:none}
+  .hero .pic,[data-theme=adult] .hero .pic{min-height:200px;height:210px}
+  [data-theme=adult] .hero .pic img{object-position:70% 24%}
+  [data-theme=teen] .hero .pic img{object-position:63% 28%}
+  [data-theme=teen] .hero .pic:before{background:linear-gradient(180deg,#fffa,transparent 40%)}
+  [data-mode=dark][data-theme=teen] .hero .pic:before{background:linear-gradient(180deg,#120e20aa,transparent 45%)}
+  [data-theme=kids] .pic{border-left:0;border-top:3px solid var(--ink);min-height:190px;height:190px}
+  .tiles{grid-template-columns:1fr;gap:12px}
+  .tile{padding:16px}
+  [data-theme=kids] .tile{min-height:0;flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px 14px}
+  [data-theme=kids] .tile svg{width:38px;height:38px;margin:0}
+  #buddy .chat{min-height:220px;height:min(42dvh,320px)}
+  .send{gap:8px}.send input{font-size:16px}
+  .tabs{flex-wrap:wrap;gap:4px}
+  .tabs button{flex:1 1 calc(50% - 4px);min-width:110px}
+}
+@media(max-width:480px){
+  [data-theme=kids]{--base:16px}
+  .circle{flex-direction:column;align-items:flex-start;gap:10px}
+  .circle .btn{width:100%}
+  .preview .seg button{padding:.45em .5em;font-size:.82rem}
+}
 </style>
 </head>
 <body>
