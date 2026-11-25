@@ -1,70 +1,98 @@
-# LearnMate AI
+# LearnMate — Learn Together, Think Further
 
-LearnMate AI is a responsive front-end prototype for a more curious, collaborative way to learn. It brings study discussions, thinking-skill practice, imaginative brainstorming, and a learning-buddy demo together in one editorial-style experience.
+**LearnMate** is an interactive, front-end web application designed as a collaborative study buddy and curiosity platform. It brings curious minds together to explore complex topics, practice mental disciplines, brainstorm ideas, and engage in conversational learning.
 
-## Live demo
+---
 
-Explore the deployed prototype: [learnmate-ai-w44n.onrender.com](https://learnmate-ai-w44n.onrender.com/).
+## ✨ Key Features
 
-## Features
+### 1. Cinematic Home Experience (`#home`)
+* **Scroll-Snap Storytelling:** A three-slide vertical storytelling showcase with smooth CSS/JS transitions, directional parallax, and ambient floating dust particles.
+* **Pointer Depth & Sway:** Subtle mouse-tracking depth effects on imagery and typography (automatically disabled if `prefers-reduced-motion` is enabled).
 
-- Responsive navigation for Explore, Communities, Skill Studio, Idea Lab, and the learning-buddy demo.
-- Full-bleed illustrated artwork with pointer-responsive parallax, subtle ambient motion, and scroll movement.
-- Reduced-motion support for visitors who prefer less animation.
-- Filterable study circles with local join/leave controls.
-- Skill Studio with selectable exercises and an interactive practice-progress indicator.
-- Idea Lab with Flip, Combine, and Scale brainstorming lenses and a local thought wall.
-- Learning-buddy chat preview with sample front-end responses.
+### 2. Explore & Rabbit Holes (`#explore`)
+* **Featured Inquiries:** Quick-launch cards for big questions in science, nature, and collective thinking.
+* **Interactive Rabbit Hole Grid:** A paginated $5 \times 6$ grid featuring 30 curated, mind-expanding topics (e.g., *Event Horizons, Quantum Entanglement, Fermi Paradox, Turing Patterns*) plus 30 reserved portal frames on Page 2.
+* **Direct-to-Buddy Integration:** Clicking any card or portal automatically navigates to the Buddy chat interface and pre-fills the inquiry.
 
-## Accounts and age-based looks
+### 3. Communities (`#communities`)
+* **Topic Filtering:** Filter discussion circles by **All**, **Science**, **Creative**, or **Study**.
+* **Interactive Joining:** Toggle membership status on active community threads.
 
-- `auth.html` handles sign in and sign up. Sign-up asks for age; under-13s also get a parent/guardian email field.
-- The look follows age: **under 10** colourful and playful, **10 to 19** soft and aesthetic, **20+** monochrome and minimal. `themes.css` holds all three; `app.html` is the signed-in experience.
-- `auth.js` is the whole account layer (accounts live in the browser's localStorage until a backend exists). Swap its functions for API calls later; the pages only use `window.Auth`.
-- **Google sign-in:** put your OAuth Web Client ID in `config.js`. Age is read from the Google account's birthday (People API, `user.birthday.read` scope). If Google has no full birthday on file, the user is asked for their age. With no Client ID set, the Google button opens a preview chooser with sample accounts.
-- Admin preview: on the sign-in page, enter `thrivetribeadmin1117` as the email and the current time (24-hour `HH:MM`) as the password, then pick any look. Admins also get a look switcher in the app. This check runs in the browser, so move it server-side before launch.
+### 4. Skill Studio (`#skills`)
+* **Deliberate Practice Modes:** Switch between four core mental disciplines:
+  * **Focus:** Stay with one good question.
+  * **Explain:** Make a hard idea feel simple without jargon.
+  * **Invent:** Give ordinary objects new jobs.
+  * **Listen:** Understand and restate opposing views fairly.
+* **Repetition Tracker:** Log completed practice reps with a dynamic progress bar and daily rep counter.
 
-## Run locally
+### 5. Idea Lab (`#ideas`)
+* **Creative Lenses:** Enter any seed thought and transform it using three cognitive lenses: **Flip it**, **Combine it**, or **Scale it**.
+* **Idea Wall:** Pin generated prompts to a visual wall for ongoing brainstorming.
 
-No package installation or build step is required. Open `index.html` in a browser, or serve the folder locally:
+### 6. Study Buddy Preview (`#buddy`)
+* **Interactive Chat Interface:** A front-end conversational preview where users can ask "why" questions or launch prompts directly from the Explore section.
 
-```sh
-python -m http.server 8000
-```
+### 7. Adaptive Authentication Overlay (`#authOverlay`)
+* **Seamless Visual Morph:** Transitions the active home slide into a black-and-white split-screen layout when opening Sign In or Sign Up.
+* **Age-Adaptive Themes:** Automatically adjusts the UI theme based on user age (`kids` for under 10, `teen` for 10–19, and `adult` for 20+), including guardian email verification for users under 13.
+* **Google Sign-In & Preview Mode:** Integrates with Google Identity Services (`gsi/client`) and includes a built-in demo modal with sample profiles when unconfigured.
 
-Then visit <http://localhost:8000>.
+### 8. Accessibility & Theme Support
+* **Dark & Light Modes:** Built-in theme switcher (`theme.js` + CSS custom properties).
+* **Responsive & Accessible:** Mobile-friendly bottom navigation bar, keyboard navigation support, ARIA attributes, and `prefers-reduced-motion` compliance.
 
-## Deploy to Render
+---
 
-This repository includes a Render Blueprint in [`render.yaml`](render.yaml). It publishes the repository root as a static site, so no package installation or build step is needed.
+## 📁 Expected Project Structure
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/hironbiswas57-droid/LEARNINGBUDDY)
-
-To deploy manually, create a **Static Site** in Render and connect this repository with these settings:
-
-- **Branch:** `main`
-- **Build command:** `echo 'No build step required'`
-- **Publish directory:** `.`
-
-Render will provide a public `onrender.com` URL after the first deploy. Pushes to `main` trigger updates when automatic deploys are enabled.
-
-## Project files
+Based on the dependencies referenced in `index.html`, the project expects the following directory layout:
 
 ```text
-LEARNINGBUDDY/
-├── index.html
-├── README.md
-├── render.yaml
+learnmate/
+├── index.html               # Main single-page application shell, styles, and UI logic
+├── README.md                # Project documentation
+├── manifest.json            # Web app manifest
+├── favicon.ico              # Root favicon
+├── theme.js                 # Light/dark mode initialization script
+├── config.js                # Configuration file (e.g., Google OAuth Client ID)
+├── auth.js                  # Authentication state, age-group routing, and session management
+├── auth.html                # Fallback standalone authentication page
+├── app.html                 # Authenticated main application destination
 └── assets/
+    ├── logo.png
+    ├── logo-mark.png
+    ├── favicon-16x16.png
+    ├── favicon-32x32.png
+    ├── apple-touch-icon.png
     ├── hero-wide.webp
     ├── astronaut-generated.webp
-    ├── citrus-generated.webp
     ├── collective-thinking.webp
     ├── mind-garden.webp
     ├── curiosity-poster.webp
-    └── supporting source and fallback artwork
+    ├── buddy-mars.webp
+    ├── explore-backdrop.jpg
+    └── skills-backdrop.jpg
 ```
 
-## Prototype notes
+---
 
-Community joins, skill progress, saved ideas, and chat replies are browser-side demonstrations. Accounts are browser-only for now. They do not connect to a community service, database, or live AI model, and they are not persisted between visits. Google Fonts load from the web when available; system font fallbacks are provided.
+## 🚀 Getting Started
+
+1. **Clone or Download:** Place all project files and the `assets/` directory in your web root.
+2. **Configure Google Auth (Optional):** Open `config.js` and add your Google OAuth Client ID. If left unconfigured, clicking **Continue with Google** will launch the built-in **Preview Mode** modal with sample accounts.
+3. **Run Locally:** Serve the directory using any static web server (e.g., VS Code Live Server, `npx serve`, or `python -m http.server`):
+   ```bash
+   npx serve .
+   ```
+4. **Open in Browser:** Navigate to `http://localhost:3000` (or the port provided by your server).
+
+---
+
+## 🛠️ Tech Stack
+
+* **HTML5 & Semantic Markup:** Single-page view switching using `<section class="win">` and URL hash routing (`#home`, `#explore`, `#communities`, `#skills`, `#ideas`, `#buddy`).
+* **Modern CSS3:** Custom properties (`--teal`, `--coral`, `--cream`), CSS Grid/Flexbox, `backdrop-filter` glassmorphism, keyframe animations, and responsive media queries.
+* **Vanilla JavaScript (ES6+):** Zero-framework DOM manipulation, Web Animations API (`element.animate`) for auth transitions, `requestAnimationFrame` pointer-tracking loops, and `localStorage` session checks.
+* **Typography:** Google Fonts (*Bricolage Grotesque*, *Geist*, *Fredoka*, and *Nunito*).
